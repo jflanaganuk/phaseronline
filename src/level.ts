@@ -1,5 +1,11 @@
 import { gameState } from './gameState';
 
+type wallType = {
+    x: number,
+    y: number
+}
+const walls: [wallType] = require('./data/walls.json');
+
 export class Level extends Phaser.Scene {
     constructor() {
         super('level');
@@ -9,12 +15,17 @@ export class Level extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16
         })
+        this.load.image('wall', '/assets/wall.png');
 
     }
     create(){
         gameState.player = this.physics.add.sprite(200, 200, 'player');
         this.createAnimations();
+        gameState.player.setCollideWorldBounds(true);
         gameState.cursors = this.input.keyboard.createCursorKeys();
+        gameState.platforms = this.physics.add.staticGroup();
+        this.createWalls();
+        this.physics.add.collider(gameState.player, gameState.platforms);
     }
     update(){
         if (gameState.cursors.right.isDown){
@@ -54,5 +65,10 @@ export class Level extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         })
+    }
+    createWalls(){
+        for(const wall of walls) {
+            gameState.platforms.create(wall.x, wall.y, 'wall');
+        }
     }
 }
