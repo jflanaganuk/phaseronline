@@ -3,10 +3,11 @@ import { Level } from './level'
 
 const config: any = {
     type: Phaser.AUTO,
-    width: 500,
+    width: 800,
     height: 600,
     fps: { target: 60 },
     backgroundColor: 'b9eaff',
+    parent: "game",
     physics: {
         default: 'arcade',
     },
