@@ -1,11 +1,5 @@
 import { gameState } from './gameState';
 
-type wallType = {
-    x: number,
-    y: number
-}
-const walls: [wallType] = require('./data/walls.json');
-
 export class Level extends Phaser.Scene {
     constructor() {
         super('level');
