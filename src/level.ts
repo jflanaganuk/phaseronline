@@ -15,17 +15,26 @@ export class Level extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16
         })
-        this.load.image('wall', '/assets/wall.png');
+        this.load.image("tiles", "../assets/entities.png");
+        this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 
     }
     create(){
+        const map = this.make.tilemap({ key: "map"});
+        const tileset = map.addTilesetImage("entities", "tiles");
+        const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0);
+        const mainLayer = map.createStaticLayer("main layer", tileset, 0, 0);
+        mainLayer.setCollisionByProperty({collides: true});
+        belowLayer.setCollisionByProperty({collides: true});
+        
         gameState.player = this.physics.add.sprite(200, 200, 'player');
         this.createAnimations();
         gameState.player.setCollideWorldBounds(true);
         gameState.cursors = this.input.keyboard.createCursorKeys();
-        gameState.platforms = this.physics.add.staticGroup();
-        this.createWalls();
-        this.physics.add.collider(gameState.player, gameState.platforms);
+        this.physics.add.collider(gameState.player, mainLayer);
+        this.physics.add.collider(gameState.player, belowLayer);
+        
+        const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0);
     }
     update(){
         if (gameState.cursors.right.isDown){
@@ -65,10 +74,5 @@ export class Level extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         })
-    }
-    createWalls(){
-        for(const wall of walls) {
-            gameState.platforms.create(wall.x, wall.y, 'wall');
-        }
     }
 }
