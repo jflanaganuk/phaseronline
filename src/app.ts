@@ -8,6 +8,7 @@ const config: any = {
     fps: { target: 60 },
     backgroundColor: 'b9eaff',
     parent: "game",
+    pixelArt: true,
     physics: {
         default: 'arcade',
     },
