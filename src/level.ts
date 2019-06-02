@@ -22,37 +22,42 @@ export class Level extends Phaser.Scene {
     create(){
         const map = this.make.tilemap({ key: "map"});
         const tileset = map.addTilesetImage("entities", "tiles");
-        const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0);
-        const mainLayer = map.createStaticLayer("main layer", tileset, 0, 0);
+        const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0).setScale(2);
+        const mainLayer = map.createStaticLayer("main layer", tileset, 0, 0).setScale(2);
         mainLayer.setCollisionByProperty({collides: true});
         belowLayer.setCollisionByProperty({collides: true});
         
-        gameState.player = this.physics.add.sprite(200, 200, 'player');
+        const spawnPoint: any = map.findObject("objects", obj => obj.name === "spawnpoint");
+        gameState.player = this.physics.add.sprite(spawnPoint.x * 2, spawnPoint.y * 2, 'player').setScale(2);
         this.createAnimations();
-        gameState.player.setCollideWorldBounds(true);
         gameState.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.collider(gameState.player, mainLayer);
         this.physics.add.collider(gameState.player, belowLayer);
+
+        const camera = this.cameras.main;
+        camera.startFollow(gameState.player);
+        camera.setBounds(0, 0, 1600, 1600);
         
-        const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0);
+        const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     }
     update(){
+        gameState.player.body.setVelocity(0);
         if (gameState.cursors.right.isDown){
             gameState.player.flipX = false;
-            gameState.player.setVelocityX(gameState.speed);
+            gameState.player.body.setVelocityX(gameState.speed);
         } else if (gameState.cursors.left.isDown){
             gameState.player.flipX = true;
-            gameState.player.setVelocityX(-gameState.speed);
+            gameState.player.body.setVelocityX(-gameState.speed);
         } else {
-            gameState.player.setVelocityX(0);
+            gameState.player.body.setVelocityX(0);
         }
 
         if (gameState.cursors.up.isDown){
-            gameState.player.setVelocityY(-gameState.speed);
+            gameState.player.body.setVelocityY(-gameState.speed);
         } else if (gameState.cursors.down.isDown){
-            gameState.player.setVelocityY(gameState.speed);
+            gameState.player.body.setVelocityY(gameState.speed);
         } else {
-            gameState.player.setVelocityY(0);
+            gameState.player.body.setVelocityY(0);
         }
 
         if (gameState.cursors.up.isUp && gameState.cursors.down.isUp && gameState.cursors.left.isUp && gameState.cursors.right.isUp) {
@@ -60,6 +65,8 @@ export class Level extends Phaser.Scene {
         } else {
             gameState.player.anims.play('run', true);
         }
+
+        gameState.player.body.velocity.normalize().scale(gameState.speed);
     }
     createAnimations() {
         this.anims.create({
