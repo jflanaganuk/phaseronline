@@ -1,3 +1,3 @@
 export const gameState: any = {
-    speed: 100
+    speed: 200
 };
