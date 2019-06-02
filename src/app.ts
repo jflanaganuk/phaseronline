@@ -3,11 +3,14 @@ import { Level } from './level'
 
 const config: any = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        parent: "game",
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 500
+    },
     fps: { target: 60 },
-    backgroundColor: 'b9eaff',
-    parent: "game",
     pixelArt: true,
     physics: {
         default: 'arcade',
@@ -16,3 +19,4 @@ const config: any = {
 }
 
 const game = new Phaser.Game(config);
+
