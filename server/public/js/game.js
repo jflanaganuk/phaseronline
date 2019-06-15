@@ -48,7 +48,6 @@ function create(){
     mainLayer.setCollisionByProperty({collides: true});
     belowLayer.setCollisionByProperty({collides: true});
     
-    this.physics.add.collider(gameState.player, belowLayer);
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);

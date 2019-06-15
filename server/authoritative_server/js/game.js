@@ -46,8 +46,8 @@ function create(){
         console.log('a user connected');
 
         players[socket.id] = {
-            x: spawnPoint.x,
-            y: spawnPoint.y,
+            x: spawnPoint.x * 2,
+            y: spawnPoint.y * 2,
             playerId: socket.id,
             input: {
                 left: false,
