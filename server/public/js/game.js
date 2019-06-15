@@ -173,7 +173,6 @@ function displayPlayers(self, playerInfo, sprite, socket){
     const spawnEffect = self.add.sprite(playerInfo.x, playerInfo.y - 10, 'spawnEffect');
     spawnEffect.anims.play('spawnLightning');
     spawnEffect.on('animationcomplete', function(){
-        console.log("animation compelted")
         this.destroy();
     })
 
