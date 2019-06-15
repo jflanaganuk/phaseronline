@@ -27,12 +27,12 @@ const gameState = {
 }
 
 function preload(){
-    this.load.spritesheet('player', './assets/player.png', {
+    this.load.spritesheet('player', '../assets/player.png', {
         frameWidth: 16,
         frameHeight: 16
     })
-    this.load.image("tiles", "./assets/entities.png");
-    this.load.tilemapTiledJSON("map", "./assets/leveldata/start.json");
+    this.load.image("tiles", "../assets/entities.png");
+    this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 }
 
 function create(){
