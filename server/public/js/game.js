@@ -31,6 +31,10 @@ function preload(){
         frameWidth: 16,
         frameHeight: 16
     })
+    this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {
+        frameWidth: 80,
+        frameHeight: 80
+    });
     this.load.image("tiles", "../assets/entities.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 }
@@ -153,12 +157,25 @@ function createAnimations(anims) {
         frameRate: 10,
         repeat: -1
     })
+    anims.create({
+        key: 'spawnLightning',
+        frames: anims.generateFrameNumbers('spawnEffect', {start: 0, end: 21}),
+        frameRate: 24,
+        repeat: 0
+    });
 }
 
 function displayPlayers(self, playerInfo, sprite, socket){
     const player = self.add.sprite(playerInfo.x * 2, playerInfo.y * 2, sprite).setScale(2);
     player.playerId = playerInfo.playerId;
     self.players.add(player);
+
+    const spawnEffect = self.add.sprite(playerInfo.x, playerInfo.y - 10, 'spawnEffect');
+    spawnEffect.anims.play('spawnLightning');
+    spawnEffect.on('animationcomplete', function(){
+        console.log("animation compelted")
+        this.destroy();
+    })
 
     if (playerInfo.playerId === socket.id) {
         gameState.player = player;
