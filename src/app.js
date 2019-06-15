@@ -1,7 +1,7 @@
-import "phaser";
-import { Level } from './level'
+const Phaser = require("phaser");
+const { Level } = require('./level');
 
-const config: any = {
+const config = {
     type: Phaser.AUTO,
     scale: {
         mode: Phaser.Scale.FIT,

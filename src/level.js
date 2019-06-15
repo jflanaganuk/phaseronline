@@ -1,4 +1,4 @@
-import { gameState } from './gameState';
+const { gameState } = require('./gameState');
 
 export class Level extends Phaser.Scene {
     constructor() {
@@ -21,7 +21,7 @@ export class Level extends Phaser.Scene {
         mainLayer.setCollisionByProperty({collides: true});
         belowLayer.setCollisionByProperty({collides: true});
         
-        const spawnPoint: any = map.findObject("objects", obj => obj.name === "spawnpoint");
+        const spawnPoint = map.findObject("objects", obj => obj.name === "spawnpoint");
         gameState.player = this.physics.add.sprite(spawnPoint.x * 2, spawnPoint.y * 2, 'player').setScale(2);
         this.createAnimations();
         gameState.cursors = this.input.keyboard.createCursorKeys();
