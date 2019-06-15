@@ -23,12 +23,12 @@ const gameState = {
 };
 
 function preload(){
-    this.load.spritesheet('player', './assets/player.png', {
+    this.load.spritesheet('player', '../assets/player.png', {
         frameWidth: 16,
         frameHeight: 16
     })
-    this.load.image("tiles", "./assets/entities.png");
-    this.load.tilemapTiledJSON("map", "./assets/leveldata/start.json");
+    this.load.image("tiles", "../assets/entities.png");
+    this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 
 }
 
@@ -46,8 +46,8 @@ function create(){
         console.log('a user connected');
 
         players[socket.id] = {
-            x: spawnPoint.x,
-            y: spawnPoint.y,
+            x: spawnPoint.x * 2,
+            y: spawnPoint.y * 2,
             playerId: socket.id,
             input: {
                 left: false,

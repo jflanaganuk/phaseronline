@@ -27,12 +27,12 @@ const gameState = {
 }
 
 function preload(){
-    this.load.spritesheet('player', './assets/player.png', {
+    this.load.spritesheet('player', '../assets/player.png', {
         frameWidth: 16,
         frameHeight: 16
     })
-    this.load.image("tiles", "./assets/entities.png");
-    this.load.tilemapTiledJSON("map", "./assets/leveldata/start.json");
+    this.load.image("tiles", "../assets/entities.png");
+    this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 }
 
 function create(){
@@ -48,7 +48,6 @@ function create(){
     mainLayer.setCollisionByProperty({collides: true});
     belowLayer.setCollisionByProperty({collides: true});
     
-    this.physics.add.collider(gameState.player, belowLayer);
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);
