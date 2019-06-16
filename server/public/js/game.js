@@ -27,14 +27,16 @@ const gameState = {
 }
 
 function preload(){
-    this.load.spritesheet('player', '../assets/player.png', {
-        frameWidth: 16,
-        frameHeight: 16
-    })
-    this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {
-        frameWidth: 80,
-        frameHeight: 80
-    });
+    this.load.spritesheet('player', '../assets/player.png', { frameWidth: 16, frameHeight: 16});
+    this.load.spritesheet('playerMoveDown', '../assets/TopDownCharacter/Character/Character_Down.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveLeft', '../assets/TopDownCharacter/Character/Character_Left.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveRight', '../assets/TopDownCharacter/Character/Character_Right.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveUp', '../assets/TopDownCharacter/Character/Character_Up.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveDownLeft', '../assets/TopDownCharacter/Character/Character_DownLeft.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveDownRight', '../assets/TopDownCharacter/Character/Character_DownRight.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveUpLeft', '../assets/TopDownCharacter/Character/Character_UpLeft.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerMoveUpRight', '../assets/TopDownCharacter/Character/Character_UpRight.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {frameWidth: 80, frameHeight: 80});
     this.load.image("tiles", "../assets/entities.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 }
@@ -51,7 +53,6 @@ function create(){
     const mainLayer = map.createStaticLayer("main layer", tileset, 0, 0).setScale(2);
     mainLayer.setCollisionByProperty({collides: true});
     belowLayer.setCollisionByProperty({collides: true});
-    
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);
@@ -85,14 +86,43 @@ function create(){
                     player.setPosition(players[id].x, players[id].y);
 
                     if (!players[id].input.up && !players[id].input.down && !players[id].input.left && !players[id].input.right) {
-                        player.anims.play('idle', true);
-                    } else {
-                        player.anims.play('run', true);
-                        if (players[id].input.left) {
-                            player.flipX = true;
+                        if (players[id].direction === "up") {
+                            player.anims.play('idleUp', true);
+                        } else if (players[id].direction === "left") {
+                            player.anims.play('idleLeft', true);
+                        } else if (players[id].direction === "right") {
+                            player.anims.play('idleRight', true);
+                        } else if (players[id].direction === "upLeft") {
+                            player.anims.play('idleUpLeft', true);
+                        } else if (players[id].direction === "upRight") {
+                            player.anims.play('idleUpRight', true);
+                        } else if (players[id].direction === "downLeft") {
+                            player.anims.play('idleDownLeft', true);
+                        } else if (players[id].direction === "downRight") {
+                            player.anims.play('idleDownRight', true);
                         } else {
-                            player.flipX = false;
+                            player.anims.play('idleDown', true);
                         }
+                    } else if (players[id].input.up) {
+                        if (players[id].input.left) {
+                            player.anims.play('moveUpLeft', true);
+                        } else if (players[id].input.right) {
+                            player.anims.play('moveUpRight', true);
+                        } else {
+                            player.anims.play('moveUp', true);
+                        }
+                    } else if (players[id].input.down) {
+                        if (players[id].input.left) {
+                            player.anims.play('moveDownLeft', true);
+                        } else if (players[id].input.right) {
+                            player.anims.play('moveDownRight', true);
+                        } else {
+                            player.anims.play('moveDown', true);
+                        }
+                    } else if (players[id].input.left) {
+                        player.anims.play('moveLeft', true);
+                    } else if (players[id].input.right) {
+                        player.anims.play('moveRight', true);
                     }
                 }
             });
@@ -114,10 +144,8 @@ function update(){
     const down = this.downKeyPressed;
 
     if (this.cursors.left.isDown) {
-        gameState.player.flipX = true;
         this.leftKeyPressed = true;
     } else if (this.cursors.right.isDown) {
-        gameState.player.flipX = false;
         this.rightKeyPressed = true;
     } else {
         this.leftKeyPressed = false;
@@ -146,17 +174,103 @@ function update(){
 
 function createAnimations(anims) {
     anims.create({
-        key: 'run',
-        frames: anims.generateFrameNumbers('player', {start: 0, end: 3}),
+        key: 'moveRight',
+        frames: anims.generateFrameNumbers('playerMoveRight', {start: 0, end: 3}),
         frameRate: 10,
         repeat: -1
     })
     anims.create({
-        key: 'idle',
-        frames: anims.generateFrameNumbers('player', {start: 0, end: 0}),
+        key: 'moveLeft',
+        frames: anims.generateFrameNumbers('playerMoveLeft', {start: 0, end: 3}),
         frameRate: 10,
         repeat: -1
     })
+    anims.create({
+        key: 'moveUp',
+        frames: anims.generateFrameNumbers('playerMoveUp', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'moveDown',
+        frames: anims.generateFrameNumbers('playerMoveDown', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'moveDownLeft',
+        frames: anims.generateFrameNumbers('playerMoveDownLeft', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'moveDownRight',
+        frames: anims.generateFrameNumbers('playerMoveDownRight', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'moveUpLeft',
+        frames: anims.generateFrameNumbers('playerMoveUpLeft', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'moveUpRight',
+        frames: anims.generateFrameNumbers('playerMoveUpRight', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: -1
+    })
+
+    anims.create({
+        key: 'idleRight',
+        frames: anims.generateFrameNumbers('playerMoveRight', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleLeft',
+        frames: anims.generateFrameNumbers('playerMoveLeft', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleUp',
+        frames: anims.generateFrameNumbers('playerMoveUp', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleDown',
+        frames: anims.generateFrameNumbers('playerMoveDown', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleDownLeft',
+        frames: anims.generateFrameNumbers('playerMoveDownLeft', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleDownLeft',
+        frames: anims.generateFrameNumbers('playerMoveDownLeft', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleUpLeft',
+        frames: anims.generateFrameNumbers('playerMoveUpLeft', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+    anims.create({
+        key: 'idleUpRight',
+        frames: anims.generateFrameNumbers('playerMoveUpRight', {start: 0, end: 0}),
+        frameRate: 10,
+        repeat: -1
+    })
+
     anims.create({
         key: 'spawnLightning',
         frames: anims.generateFrameNumbers('spawnEffect', {start: 0, end: 21}),
