@@ -2,7 +2,7 @@ const Phaser = require("phaser");
 const io = require("socket.io-client");
 
 const config = {
-    type: Phaser.AUTO,
+    type: Phaser.CANVAS,
     scale: {
         mode: Phaser.Scale.FIT,
         parent: "game",
@@ -38,6 +38,7 @@ function preload(){
     this.load.spritesheet('playerMoveUpRight', '../assets/TopDownCharacter/Character/Character_UpRight.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {frameWidth: 80, frameHeight: 80});
     this.load.image("tiles", "../assets/entities.png");
+    this.load.image("fullscreen", "../assets/fullscreen.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
     this.load.plugin('rexvirtualjoystickplugin', './public/js/virtualjoystick.min.js', true);
 }
@@ -57,6 +58,17 @@ function create(){
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);
+
+    const fullscreenButton = this.add.sprite(750, 50, 'fullscreen');
+    fullscreenButton.setInteractive();
+    fullscreenButton.setScrollFactor(0);
+    fullscreenButton.on('pointerup', () => {
+        if (this.scale.isFullscreen) {
+            this.scale.stopFullscreen();
+        } else {
+            this.scale.startFullscreen();
+        }
+    })
 
     this.socket.on('currentPlayers', function(players) {
         Object.keys(players).forEach(function (id){
@@ -134,11 +146,11 @@ function create(){
     //Test for devices
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-            x: 75,
-            y: 425,
-            radius: 50,
-            base: this.add.graphics().fillStyle(0x888888).fillCircle(0, 0, 50),
-            thumb: this.add.graphics().fillStyle(0xcccccc).fillCircle(0, 0,25),
+            x: 125,
+            y: 350,
+            radius: 100,
+            base: this.add.graphics().fillStyle(0x888888).fillCircle(0, 0, 100),
+            thumb: this.add.graphics().fillStyle(0xcccccc).fillCircle(0, 0, 50),
         });
         this.joystickKeys = this.joyStick.createCursorKeys();
     } else {
