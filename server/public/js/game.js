@@ -39,6 +39,7 @@ function preload(){
     this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {frameWidth: 80, frameHeight: 80});
     this.load.image("tiles", "../assets/entities.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
+    this.load.plugin('rexvirtualjoystickplugin', './public/js/virtualjoystick.min.js', true);
 }
 
 function create(){
@@ -130,6 +131,32 @@ function create(){
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    //Test for devices
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
+        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+            x: 75,
+            y: 425,
+            radius: 50,
+            base: this.add.graphics().fillStyle(0x888888).fillCircle(0, 0, 50),
+            thumb: this.add.graphics().fillStyle(0xcccccc).fillCircle(0, 0,25),
+        });
+        this.joystickKeys = this.joyStick.createCursorKeys();
+    } else {
+        this.joystickKeys = {
+            left: {
+                isDown: false
+            },
+            right: {
+                isDown: false
+            },
+            up: {
+                isDown: false
+            },
+            down: {
+                isDown: false
+            },
+        }
+    }
     this.leftKeyPressed = false;
     this.rightKeyPressed = false;
     this.upKeyPressed = false;
@@ -143,18 +170,18 @@ function update(){
     const up = this.upKeyPressed;
     const down = this.downKeyPressed;
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.joystickKeys.left.isDown) {
         this.leftKeyPressed = true;
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.joystickKeys.right.isDown) {
         this.rightKeyPressed = true;
     } else {
         this.leftKeyPressed = false;
         this.rightKeyPressed = false;
     }
 
-    if (this.cursors.up.isDown) {
+    if (this.cursors.up.isDown || this.joystickKeys.up.isDown) {
         this.upKeyPressed = true;
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown || this.joystickKeys.down.isDown) {
         this.downKeyPressed = true;
     } else {
         this.upKeyPressed = false;
