@@ -123,6 +123,27 @@ function handlePlayerInput(self, playerId, input){
     self.players.getChildren().forEach((player) => {
         if (playerId === player.playerId) {
             players[player.playerId].input = input;
+            if (players[player.playerId].input.up) {
+                if (players[player.playerId].input.left){
+                    players[player.playerId].direction = "upLeft";
+                } else if (players[player.playerId].input.right) {
+                    players[player.playerId].direction = "upRight";
+                } else {
+                    players[player.playerId].direction = "up";
+                }
+            } else if (players[player.playerId].input.down) {
+                if (players[player.playerId].input.left){
+                    players[player.playerId].direction = "downLeft";
+                } else if (players[player.playerId].input.right) {
+                    players[player.playerId].direction = "downRight";
+                } else {
+                    players[player.playerId].direction = "down";
+                }
+            } else if (players[player.playerId].input.left) {
+                players[player.playerId].direction = "left";
+            } else if (players[player.playerId].input.right) {
+                players[player.playerId].direction = "right";
+            }
         }
     })
 }
