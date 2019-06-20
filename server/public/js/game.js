@@ -37,6 +37,10 @@ function preload(){
     this.load.spritesheet('playerMoveUpLeft', '../assets/TopDownCharacter/Character/Character_UpLeft.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerMoveUpRight', '../assets/TopDownCharacter/Character/Character_UpRight.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {frameWidth: 80, frameHeight: 80});
+    this.load.spritesheet('playerRollRight', '../assets/TopDownCharacter/Character/Character_RollRight.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollLeft', '../assets/TopDownCharacter/Character/Character_RollLeft.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollUp', '../assets/TopDownCharacter/Character/Character_RollUp.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollDown', '../assets/TopDownCharacter/Character/Character_RollDown.png', {frameWidth: 32, frameHeight: 32});
     this.load.image("tiles", "../assets/entities.png");
     this.load.image("fullscreen", "../assets/fullscreen.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
@@ -122,7 +126,11 @@ function create(){
                         } else if (players[id].input.right) {
                             player.anims.play('moveUpRight', true);
                         } else {
-                            player.anims.play('moveUp', true);
+                            if (players[id].input.shift) {
+                                player.anims.play('rollUp', true);
+                            } else {
+                                player.anims.play('moveUp', true);
+                            }
                         }
                     } else if (players[id].input.down) {
                         if (players[id].input.left) {
@@ -130,12 +138,24 @@ function create(){
                         } else if (players[id].input.right) {
                             player.anims.play('moveDownRight', true);
                         } else {
-                            player.anims.play('moveDown', true);
+                            if (players[id].input.shift) {
+                                player.anims.play('rollDown', true);
+                            } else {
+                                player.anims.play('moveDown', true);
+                            }
                         }
                     } else if (players[id].input.left) {
-                        player.anims.play('moveLeft', true);
+                        if (players[id].input.shift) {
+                            player.anims.play('rollLeft', true);
+                        } else {
+                            player.anims.play('moveLeft', true);
+                        }
                     } else if (players[id].input.right) {
-                        player.anims.play('moveRight', true);
+                        if (players[id].input.shift) {
+                            player.anims.play('rollRight', true);
+                        } else {
+                            player.anims.play('moveRight', true);
+                        }
                     }
                 }
             });
@@ -173,6 +193,7 @@ function create(){
     this.rightKeyPressed = false;
     this.upKeyPressed = false;
     this.downKeyPressed = false;
+    this.shiftKeyPressed = false;
 }
 
 function update(){
@@ -181,6 +202,7 @@ function update(){
     const right = this.rightKeyPressed;
     const up = this.upKeyPressed;
     const down = this.downKeyPressed;
+    const shift = this.shiftKeyPressed;
 
     if (this.cursors.left.isDown || this.joystickKeys.left.isDown) {
         this.leftKeyPressed = true;
@@ -200,12 +222,19 @@ function update(){
         this.downKeyPressed = false;
     }
 
-    if (left !== this.leftKeyPressed || right !== this.rightKeyPressed || up !== this.upKeyPressed || down !== this.downKeyPressed) {
+    if (this.cursors.shift.isDown) { // TODO - add touch button
+        this.shiftKeyPressed = true;
+    } else {
+        this.shiftKeyPressed = false;
+    }
+
+    if (left !== this.leftKeyPressed || right !== this.rightKeyPressed || up !== this.upKeyPressed || down !== this.downKeyPressed || shift !== this.shiftKeyPressed) {
         this.socket.emit('playerInput', {
             left: this.leftKeyPressed,
             right: this.rightKeyPressed,
             up: this.upKeyPressed,
-            down: this.downKeyPressed
+            down: this.downKeyPressed,
+            shift: this.shiftKeyPressed
         });
     }
 
@@ -260,6 +289,31 @@ function createAnimations(anims) {
         frameRate: 10,
         repeat: -1
     })
+
+    anims.create({
+        key: 'rollRight',
+        frames: anims.generateFrameNumbers('playerRollRight', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollLeft',
+        frames: anims.generateFrameNumbers('playerRollLeft', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollUp',
+        frames: anims.generateFrameNumbers('playerRollUp', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollDown',
+        frames: anims.generateFrameNumbers('playerRollDown', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
 
     anims.create({
         key: 'idleRight',
