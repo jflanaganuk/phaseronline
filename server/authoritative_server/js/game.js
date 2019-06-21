@@ -20,7 +20,9 @@ const config = {
 
 const gameState = {
     speed: 200,
-    rollModifier: 2
+    rollModifier: 2,
+    rollLength: 400,
+    rollCooldown: 1000
 };
 
 function preload(){
@@ -57,7 +59,8 @@ function create(){
                 down: false,
                 shift: false
             },
-            rolling: false
+            rolling: false,
+            canRoll: true
         }
 
         addPlayer(self, players[socket.id]);
@@ -83,12 +86,16 @@ function create(){
 function update(){
 
     this.players.getChildren().forEach((player) => {
-        const { input, rolling } = players[player.playerId];
-        if (input.shift && !rolling) {
+        const { input, rolling, canRoll } = players[player.playerId];
+        if (input.shift && !rolling && canRoll) {
             players[player.playerId].rolling = true;
+            players[player.playerId].canRoll = false;
             setTimeout(() => {
                 players[player.playerId].rolling = false;
-            }, 500);
+            }, gameState.rollLength);
+            setTimeout(() => {
+                players[player.playerId].canRoll = true;
+            }, gameState.rollCooldown);
         }
 
         const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;

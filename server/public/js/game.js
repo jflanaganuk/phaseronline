@@ -36,11 +36,18 @@ function preload(){
     this.load.spritesheet('playerMoveDownRight', '../assets/TopDownCharacter/Character/Character_DownRight.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerMoveUpLeft', '../assets/TopDownCharacter/Character/Character_UpLeft.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerMoveUpRight', '../assets/TopDownCharacter/Character/Character_UpRight.png', {frameWidth: 32, frameHeight: 32});
+
     this.load.spritesheet('spawnEffect', '../assets/boltsequence.png', {frameWidth: 80, frameHeight: 80});
+
     this.load.spritesheet('playerRollRight', '../assets/TopDownCharacter/Character/Character_RollRight.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerRollLeft', '../assets/TopDownCharacter/Character/Character_RollLeft.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerRollUp', '../assets/TopDownCharacter/Character/Character_RollUp.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerRollDown', '../assets/TopDownCharacter/Character/Character_RollDown.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollUpRight', '../assets/TopDownCharacter/Character/Character_RollUpRight.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollUpLeft', '../assets/TopDownCharacter/Character/Character_RollUpLeft.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollDownRight', '../assets/TopDownCharacter/Character/Character_RollDownRight.png', {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('playerRollDownLeft', '../assets/TopDownCharacter/Character/Character_RollDownLeft.png', {frameWidth: 32, frameHeight: 32});
+
     this.load.image("tiles", "../assets/entities.png");
     this.load.image("fullscreen", "../assets/fullscreen.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
@@ -99,59 +106,76 @@ function create(){
     this.socket.on('playerUpdates', function (players) {
         Object.keys(players).forEach(function(id) {
             self.players.getChildren().forEach(function (player) {
-                if (players[id].playerId === player.playerId) {
-                    player.setPosition(players[id].x, players[id].y);
+                const { x, y, direction, input, playerId, rolling, canRoll } = players[id];
+                if (playerId === player.playerId) {
+                    player.setPosition(x, y);
 
-                    if (!players[id].input.up && !players[id].input.down && !players[id].input.left && !players[id].input.right) {
-                        if (players[id].direction === "up") {
+                    if (!input.up && !input.down && !input.left && !input.right) {
+                        if (direction === "up") {
                             player.anims.play('idleUp', true);
-                        } else if (players[id].direction === "left") {
+                        } else if (direction === "left") {
                             player.anims.play('idleLeft', true);
-                        } else if (players[id].direction === "right") {
+                        } else if (direction === "right") {
                             player.anims.play('idleRight', true);
-                        } else if (players[id].direction === "upLeft") {
+                        } else if (direction === "upLeft") {
                             player.anims.play('idleUpLeft', true);
-                        } else if (players[id].direction === "upRight") {
+                        } else if (direction === "upRight") {
                             player.anims.play('idleUpRight', true);
-                        } else if (players[id].direction === "downLeft") {
+                        } else if (direction === "downLeft") {
                             player.anims.play('idleDownLeft', true);
-                        } else if (players[id].direction === "downRight") {
+                        } else if (direction === "downRight") {
                             player.anims.play('idleDownRight', true);
                         } else {
                             player.anims.play('idleDown', true);
                         }
-                    } else if (players[id].input.up) {
-                        if (players[id].input.left) {
-                            player.anims.play('moveUpLeft', true);
-                        } else if (players[id].input.right) {
-                            player.anims.play('moveUpRight', true);
+                    } else if (input.up) {
+                        if (input.left) {
+                            if (rolling) {
+                                player.anims.play('rollUpLeft', true);
+                            } else {
+                                player.anims.play('moveUpLeft', true);
+                            }
+                        } else if (input.right) {
+                            if (rolling) {
+                                player.anims.play('rollUpRight', true);
+                            } else {
+                                player.anims.play('moveUpRight', true);
+                            }
                         } else {
-                            if (players[id].input.shift) {
+                            if (rolling) {
                                 player.anims.play('rollUp', true);
                             } else {
                                 player.anims.play('moveUp', true);
                             }
                         }
-                    } else if (players[id].input.down) {
-                        if (players[id].input.left) {
-                            player.anims.play('moveDownLeft', true);
-                        } else if (players[id].input.right) {
-                            player.anims.play('moveDownRight', true);
+                    } else if (input.down) {
+                        if (input.left) {
+                            if (rolling) {
+                                player.anims.play('rollDownLeft', true);
+                            } else {
+                                player.anims.play('moveDownLeft', true);
+                            }
+                        } else if (input.right) {
+                            if (rolling) {
+                                player.anims.play('rollDownRight', true);
+                            } else {
+                                player.anims.play('moveDownRight', true);
+                            }
                         } else {
-                            if (players[id].input.shift) {
+                            if (rolling) {
                                 player.anims.play('rollDown', true);
                             } else {
                                 player.anims.play('moveDown', true);
                             }
                         }
-                    } else if (players[id].input.left) {
-                        if (players[id].input.shift) {
+                    } else if (input.left) {
+                        if (rolling) {
                             player.anims.play('rollLeft', true);
                         } else {
                             player.anims.play('moveLeft', true);
                         }
-                    } else if (players[id].input.right) {
-                        if (players[id].input.shift) {
+                    } else if (input.right) {
+                        if (rolling) {
                             player.anims.play('rollRight', true);
                         } else {
                             player.anims.play('moveRight', true);
@@ -171,8 +195,12 @@ function create(){
             radius: 100,
             base: this.add.graphics().fillStyle(0x888888).fillCircle(0, 0, 100),
             thumb: this.add.graphics().fillStyle(0xcccccc).fillCircle(0, 0, 50),
+            forceMin: 32
         });
         this.joystickKeys = this.joyStick.createCursorKeys();
+        this.virtualShiftKey = this.add.graphics().fillStyle(0xcccccc).fillCircle(config.scale.width - 100, config.scale.height - 100, 50);
+        this.virtualShiftKey.setScrollFactor(0);
+        this.virtualShiftKey.setInteractive(new Phaser.Geom.Circle(config.scale.width - 100, config.scale.height - 100, 50), () => {});
     } else {
         this.joystickKeys = {
             left: {
@@ -311,6 +339,30 @@ function createAnimations(anims) {
     anims.create({
         key: 'rollDown',
         frames: anims.generateFrameNumbers('playerRollDown', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollUpRight',
+        frames: anims.generateFrameNumbers('playerRollUpRight', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollUpLeft',
+        frames: anims.generateFrameNumbers('playerRollUpLeft', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollDownRight',
+        frames: anims.generateFrameNumbers('playerRollDownRight', {start: 0, end: 3}),
+        frameRate: 10,
+        repeat: 0
+    });
+    anims.create({
+        key: 'rollDownLeft',
+        frames: anims.generateFrameNumbers('playerRollDownLeft', {start: 0, end: 3}),
         frameRate: 10,
         repeat: 0
     });
