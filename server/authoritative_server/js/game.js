@@ -19,7 +19,10 @@ const config = {
 }
 
 const gameState = {
-    speed: 200
+    speed: 200,
+    rollModifier: 2,
+    rollLength: 400,
+    rollCooldown: 1000
 };
 
 function preload(){
@@ -53,8 +56,11 @@ function create(){
                 left: false,
                 right: false,
                 up: false,
-                down: false
-            }
+                down: false,
+                shift: false
+            },
+            rolling: false,
+            canRoll: true
         }
 
         addPlayer(self, players[socket.id]);
@@ -80,24 +86,36 @@ function create(){
 function update(){
 
     this.players.getChildren().forEach((player) => {
-        const input = players[player.playerId].input;
+        const { input, rolling, canRoll } = players[player.playerId];
+        if (input.shift && !rolling && canRoll) {
+            players[player.playerId].rolling = true;
+            players[player.playerId].canRoll = false;
+            setTimeout(() => {
+                players[player.playerId].rolling = false;
+            }, gameState.rollLength);
+            setTimeout(() => {
+                players[player.playerId].canRoll = true;
+            }, gameState.rollCooldown);
+        }
+
+        const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
         if (input.left) {
-            player.body.setVelocityX(-gameState.speed);
+            player.body.setVelocityX(-speed);
         } else if (input.right) {
-            player.body.setVelocityX(gameState.speed);
+            player.body.setVelocityX(speed);
         } else {
             player.body.setVelocityX(0);
         }
 
         if (input.up) {
-            player.body.setVelocityY(-gameState.speed);
+            player.body.setVelocityY(-speed);
         } else if (input.down) {
-            player.body.setVelocityY(gameState.speed);
+            player.body.setVelocityY(speed);
         } else {
             player.body.setVelocityY(0);
         }
 
-        player.body.velocity.normalize().scale(gameState.speed);
+        player.body.velocity.normalize().scale(speed);
 
         players[player.playerId].x = player.x;
         players[player.playerId].y = player.y;
