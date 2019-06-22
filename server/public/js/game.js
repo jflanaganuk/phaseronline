@@ -71,6 +71,7 @@ function create(){
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);
+    aboveLayer.setDepth(1);
 
     this.input.addPointer(3);
 

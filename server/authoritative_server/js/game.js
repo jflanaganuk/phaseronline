@@ -26,7 +26,7 @@ const gameState = {
 };
 
 function preload(){
-    this.load.spritesheet('player', '../assets/player.png', {
+    this.load.spritesheet('player', '../assets/TopDownCharacter/Character/Character_Right.png', {
         frameWidth: 16,
         frameHeight: 16
     })
