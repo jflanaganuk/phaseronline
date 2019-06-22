@@ -48,6 +48,8 @@ function preload(){
     this.load.spritesheet('playerRollDownRight', '../assets/TopDownCharacter/Character/Character_RollDownRight.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerRollDownLeft', '../assets/TopDownCharacter/Character/Character_RollDownLeft.png', {frameWidth: 32, frameHeight: 32});
 
+    this.load.image('button', '../assets/button.png');
+
     this.load.image("tiles", "../assets/entities.png");
     this.load.image("fullscreen", "../assets/fullscreen.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
@@ -69,6 +71,8 @@ function create(){
 
     const aboveLayer = map.createStaticLayer("above layer", tileset, 0, 0).setScale(2);
     createAnimations(this.anims);
+
+    this.input.addPointer(3);
 
     const fullscreenButton = this.add.sprite(750, 50, 'fullscreen');
     fullscreenButton.setInteractive();
@@ -187,6 +191,11 @@ function create(){
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.virtualKeys = {
+        shift: {
+            isDown: false
+        }
+    }
     //Test for devices
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
@@ -198,9 +207,12 @@ function create(){
             forceMin: 32
         });
         this.joystickKeys = this.joyStick.createCursorKeys();
-        this.virtualShiftKey = this.add.graphics().fillStyle(0xcccccc).fillCircle(config.scale.width - 100, config.scale.height - 100, 50);
+        this.virtualShiftKey = this.add.sprite(config.scale.width - 100, config.scale.height - 100, 'button').setScale(2);
         this.virtualShiftKey.setScrollFactor(0);
-        this.virtualShiftKey.setInteractive(new Phaser.Geom.Circle(config.scale.width - 100, config.scale.height - 100, 50), () => {});
+        this.virtualShiftKey.setInteractive();
+        this.virtualShiftKey.on('pointerdown', () => {
+            this.virtualKeys.shift.isDown = true;
+        })
     } else {
         this.joystickKeys = {
             left: {
@@ -250,7 +262,7 @@ function update(){
         this.downKeyPressed = false;
     }
 
-    if (this.cursors.shift.isDown) { // TODO - add touch button
+    if (this.cursors.shift.isDown || this.virtualKeys.shift.isDown) { // TODO - add touch button
         this.shiftKeyPressed = true;
     } else {
         this.shiftKeyPressed = false;
@@ -264,6 +276,12 @@ function update(){
             down: this.downKeyPressed,
             shift: this.shiftKeyPressed
         });
+    }
+    //reset mobile keys
+    this.virtualKeys = {
+        shift: {
+            isDown: false
+        }
     }
 
 }
