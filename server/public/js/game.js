@@ -50,7 +50,7 @@ function preload(){
 
     this.load.image('button', '../assets/button.png');
 
-    this.load.image("tiles", "../assets/entities.png");
+    this.load.image("tiles", "../assets/entities-extruded.png");
     this.load.image("fullscreen", "../assets/fullscreen.png");
     this.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
     this.load.plugin('rexvirtualjoystickplugin', './public/js/virtualjoystick.min.js', true);
@@ -63,7 +63,7 @@ function create(){
     this.players = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
-    const tileset = map.addTilesetImage("entities", "tiles");
+    const tileset = map.addTilesetImage("entities", "tiles", 16, 16, 1, 2);
     const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0).setScale(2);
     const mainLayer = map.createStaticLayer("main layer", tileset, 0, 0).setScale(2);
     mainLayer.setCollisionByProperty({collides: true});
