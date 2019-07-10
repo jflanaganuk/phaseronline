@@ -1,5 +1,6 @@
-const Phaser = require("phaser");
-const io = require("socket.io-client");
+import Phaser from 'phaser';
+import io from 'socket.io-client';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType } from '../../shared/types';
 
 const config = {
     type: Phaser.CANVAS,
@@ -23,10 +24,11 @@ const config = {
 }
 
 const gameState = {
-    speed: 200
+    speed: 200,
+    player: {}
 }
 
-function preload(){
+function preload(this: SceneWithPlayersType){
     this.load.spritesheet('player', '../assets/player.png', { frameWidth: 16, frameHeight: 16});
     this.load.spritesheet('playerMoveDown', '../assets/TopDownCharacter/Character/Character_Down.png', {frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('playerMoveLeft', '../assets/TopDownCharacter/Character/Character_Left.png', {frameWidth: 32, frameHeight: 32});
@@ -56,7 +58,7 @@ function preload(){
     this.load.plugin('rexvirtualjoystickplugin', './public/js/virtualjoystick.min.js', true);
 }
 
-function create(){
+function create(this: SceneWithPlayersAndInputType){
 
     const self = this;
     this.socket = io();
@@ -86,7 +88,7 @@ function create(){
         }
     })
 
-    this.socket.on('currentPlayers', function(players) {
+    this.socket.on('currentPlayers', function(players: PlayersType) {
         Object.keys(players).forEach(function (id){
             if (players[id].playerId === self.socket.id) {
                 displayPlayers(self, players[id], 'player', self.socket);
@@ -96,24 +98,24 @@ function create(){
         });
     });
 
-    this.socket.on('newPlayer', function(playerInfo) {
+    this.socket.on('newPlayer', function(playerInfo: PlayerType) {
         displayPlayers(self, playerInfo, 'player', self.socket); // TODO - this will need changing to otherPlayer
     });
 
-    this.socket.on('disconnect', function (playerId) {
-        self.players.getChildren().forEach(function (player) {
+    this.socket.on('disconnect', function (playerId: string) {
+        self.players.getChildren().forEach(function (player: PlayerType) {
             if (playerId === player.playerId) {
-                player.destroy();
+                player.destroy && player.destroy();
             }
         });
     });
 
-    this.socket.on('playerUpdates', function (players) {
+    this.socket.on('playerUpdates', function (players: PlayersType) {
         Object.keys(players).forEach(function(id) {
-            self.players.getChildren().forEach(function (player) {
+            self.players.getChildren().forEach(function (player: PlayerType) {
                 const { x, y, direction, input, playerId, rolling, canRoll } = players[id];
-                if (playerId === player.playerId) {
-                    player.setPosition(x, y);
+                if (playerId === player.playerId && player.anims) {
+                    player.setPosition && player.setPosition(x, y);
 
                     if (!input.up && !input.down && !input.left && !input.right) {
                         if (direction === "up") {
@@ -199,7 +201,8 @@ function create(){
     }
     //Test for devices
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
-        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+        this.joyStick = this.plugins.get('rexvirtualjoystickplugin');
+        this.joyStick.add(this, {
             x: 125,
             y: 350,
             radius: 100,
@@ -207,7 +210,7 @@ function create(){
             thumb: this.add.graphics().fillStyle(0xcccccc).fillCircle(0, 0, 50),
             forceMin: 32
         });
-        this.joystickKeys = this.joyStick.createCursorKeys();
+        this.joyStickKeys = this.joyStick.createCursorKeys();
         this.virtualShiftKey = this.add.sprite(config.scale.width - 100, config.scale.height - 100, 'button').setScale(2);
         this.virtualShiftKey.setScrollFactor(0);
         this.virtualShiftKey.setInteractive();
@@ -215,7 +218,7 @@ function create(){
             this.virtualKeys.shift.isDown = true;
         })
     } else {
-        this.joystickKeys = {
+        this.joyStickKeys = {
             left: {
                 isDown: false
             },
@@ -237,7 +240,7 @@ function create(){
     this.shiftKeyPressed = false;
 }
 
-function update(){
+function update(this: SceneWithPlayersAndInputType){
 
     const left = this.leftKeyPressed;
     const right = this.rightKeyPressed;
@@ -245,25 +248,25 @@ function update(){
     const down = this.downKeyPressed;
     const shift = this.shiftKeyPressed;
 
-    if (this.cursors.left.isDown || this.joystickKeys.left.isDown) {
+    if (this.cursors.left && this.cursors.left.isDown || this.joyStickKeys.left && this.joyStickKeys.left.isDown) {
         this.leftKeyPressed = true;
-    } else if (this.cursors.right.isDown || this.joystickKeys.right.isDown) {
+    } else if (this.cursors.right && this.cursors.right.isDown || this.joyStickKeys.right && this.joyStickKeys.right.isDown) {
         this.rightKeyPressed = true;
     } else {
         this.leftKeyPressed = false;
         this.rightKeyPressed = false;
     }
 
-    if (this.cursors.up.isDown || this.joystickKeys.up.isDown) {
+    if (this.cursors.up && this.cursors.up.isDown || this.joyStickKeys.up && this.joyStickKeys.up.isDown) {
         this.upKeyPressed = true;
-    } else if (this.cursors.down.isDown || this.joystickKeys.down.isDown) {
+    } else if (this.cursors.down && this.cursors.down.isDown || this.joyStickKeys.down && this.joyStickKeys.down.isDown) {
         this.downKeyPressed = true;
     } else {
         this.upKeyPressed = false;
         this.downKeyPressed = false;
     }
 
-    if (this.cursors.shift.isDown || this.virtualKeys.shift.isDown) { // TODO - add touch button
+    if (this.cursors.shift && this.cursors.shift.isDown || this.virtualKeys.shift.isDown) { 
         this.shiftKeyPressed = true;
     } else {
         this.shiftKeyPressed = false;
@@ -287,7 +290,7 @@ function update(){
 
 }
 
-function createAnimations(anims) {
+function createAnimations(anims: Phaser.Animations.AnimationManager) {
     anims.create({
         key: 'moveRight',
         frames: anims.generateFrameNumbers('playerMoveRight', {start: 0, end: 3}),
@@ -443,15 +446,15 @@ function createAnimations(anims) {
     });
 }
 
-function displayPlayers(self, playerInfo, sprite, socket){
-    const player = self.add.sprite(playerInfo.x * 2, playerInfo.y * 2, sprite).setScale(2);
+function displayPlayers(self: SceneWithPlayersAndInputType, playerInfo: PlayerType, sprite: string, socket: any){
+    const player: PlayerImageType = self.add.sprite(playerInfo.x * 2, playerInfo.y * 2, sprite).setScale(2);
     player.playerId = playerInfo.playerId;
     self.players.add(player);
 
     const spawnEffect = self.add.sprite(playerInfo.x, playerInfo.y - 10, 'spawnEffect');
     spawnEffect.anims.play('spawnLightning');
-    spawnEffect.on('animationcomplete', function(){
-        this.destroy();
+    spawnEffect.on('animationcomplete', function(this: PlayerType){
+        this.destroy && this.destroy();
     })
 
     if (playerInfo.playerId === socket.id) {

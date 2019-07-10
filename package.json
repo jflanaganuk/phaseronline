@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "cd server/authoritative_server && npm run build && cd ../public && npm run build",
-    "start": "npm run build && nodemon server/index.js",
+    "start": "npm run build && node server/index.js",
     "init": "lerna init",
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap"
@@ -36,7 +36,6 @@
     "webpack-cli": "^3.3.2"
   },
   "devDependencies": {
-    "lerna": "^3.15.0",
-    "nodemon": "^1.19.1"
+    "lerna": "^3.15.0"
   }
 }
