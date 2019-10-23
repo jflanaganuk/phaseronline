@@ -5,6 +5,8 @@ It runs the phaser engine both on the client and the server at the same time, th
 The client is solely responsible for sending input details to the server and rendering the output on screen.
 Both the server and client share assets such as images and level data.
 
+Kanban is now on jira: https://jflanaganuk.atlassian.net/jira/software/projects/PHAS/boards/1
+
 ## To play
 
 ```
