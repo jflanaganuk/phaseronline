@@ -28,6 +28,8 @@ export function createAnimations(anims: Phaser.Animations.AnimationManager) {
     animWrapper(anims, 'idleUpRight', 'playerMoveUpRight');
 
     animWrapper(anims, 'spawnLightning', 'spawnEffect', 21, 24, 0);
+
+    animWrapper(anims, 'enemyMoveIdle', 'player', 3);
 }
 
 function animWrapper(anims: Phaser.Animations.AnimationManager, key: string, name: string, length: number = 0, frameRate: number = 10, repeat: number = -1) {

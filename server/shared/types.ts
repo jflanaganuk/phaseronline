@@ -28,8 +28,25 @@ export type PlayersType = {
     [key: string]: PlayerType
 }
 
+export type EnemyType = {
+    x: number;
+    y: number;
+    enemyId: string;
+    destroy?(): void;
+    setPosition?(x: number, y: number): void;
+    body?: Phaser.Physics.Arcade.Body;
+    anims?: {
+        play(key: string, child: boolean): void;
+    };
+}
+
+export type EnemiesType = {
+    [key: string]: EnemyType;
+}
+
 export type SceneWithPlayersType = Phaser.Scene & {
     players: any;
+    enemies: any;
     socket?: any;
 }
 
@@ -68,6 +85,15 @@ export type SpawnPointType = Phaser.GameObjects.GameObject & {
     y?: number;
 }
 
+export type EnemySpawnsType = (Phaser.GameObjects.GameObject & {
+    x?: number;
+    y?: number;
+})[];
+
 export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     playerId?: string;
+}
+
+export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
+    enemyId?: string;
 }

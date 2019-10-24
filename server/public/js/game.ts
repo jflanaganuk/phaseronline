@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 import io from 'socket.io-client';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
 import { onPlayerUpdate, displayPlayers } from './objects/playerController';
 import { processInputs } from './objects/inputController';
+import { displayEnemies, onEnemyUpdate } from './objects/enemyController';
 
 config.scene = {
     preload,
@@ -22,6 +23,7 @@ function create(this: SceneWithPlayersAndInputType){
     const self = this;
     this.socket = io();
     this.players = this.add.group();
+    this.enemies = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
     const tileset = map.addTilesetImage("entities", "tiles", 16, 16, 1, 2);
@@ -57,6 +59,12 @@ function create(this: SceneWithPlayersAndInputType){
         });
     });
 
+    this.socket.on('currentEnemies', function(enemies: EnemiesType) {
+        Object.keys(enemies).forEach(function (id){
+            displayEnemies(self, enemies[id], 'enemy');
+        });
+    });
+
     this.socket.on('newPlayer', function(playerInfo: PlayerType) {
         displayPlayers(self, playerInfo, 'player', self.socket, gameState); // TODO - this will need changing to otherPlayer
     });
@@ -71,6 +79,10 @@ function create(this: SceneWithPlayersAndInputType){
 
     this.socket.on('playerUpdates', function (players: PlayersType) {
         onPlayerUpdate(players, self);
+    });
+
+    this.socket.on('enemyUpdates', function (enemies: EnemiesType){
+        onEnemyUpdate(enemies, self);
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
