@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
+import { addEnemy } from './objects/enemyController';
 declare global {
     interface Window { io: any, gameLoaded: any }
 }
@@ -13,6 +14,7 @@ window.gameLoaded = window.gameLoaded || {};
 const { io } = window;
 
 const players: PlayersType = {};
+const enemies: EnemiesType = {};
 
 function preload(this: Phaser.Scene){
     assetLoader(this);
@@ -31,8 +33,21 @@ function create(this: SceneWithPlayersType){
     const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0).setScale(2);
     belowLayer.setCollisionByProperty({collides: true});
     const spawnPoint: SpawnPointType = map.findObject("objects", (obj: {name: string}) => obj.name === "spawnpoint");
+    const enemyPoints: EnemySpawnsType = map.filterObjects("objects", (obj: {name: string}) => obj.name === "Enemy");
 
     this.players = this.physics.add.group();
+    this.enemies = this.physics.add.group();
+
+    enemyPoints.forEach((enemy: SpawnPointType, index: number) => {
+        const stringIndex = String(index);
+        enemies[stringIndex] = {
+            x: enemy.x ? enemy.x * 2 : 0,
+            y: enemy.y ? enemy.y * 2 : 0,
+            enemyId: stringIndex
+        }
+        addEnemy(self, enemies[stringIndex]);
+    });
+
     io.on('connection', function(socket: Socket){
         console.log('a user connected');
 
@@ -55,6 +70,7 @@ function create(this: SceneWithPlayersType){
         addPlayer(self, players[id]);
 
         socket.emit('currentPlayers', players);
+        socket.emit('currentEnemies', enemies);
         socket.broadcast.emit('newPlayer', players[id]);
 
         socket.on('disconnect', function(){
@@ -110,7 +126,18 @@ function update(this: SceneWithPlayersType){
         players[id].x = player.x;
         players[id].y = player.y;
     })
+
+    this.enemies.getChildren().forEach((enemy: EnemyType) => {
+        const id = enemy.enemyId;
+        if (!enemy.body) return;
+        enemy.body.setVelocityY(5);
+
+        enemies[id].x = enemy.x;
+        enemies[id].y = enemy.y;
+    });
+
     io.emit('playerUpdates', players);
+    io.emit('enemyUpdates', enemies);
 }
 
 const game = new Phaser.Game(config);
