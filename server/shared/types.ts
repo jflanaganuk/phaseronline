@@ -63,7 +63,7 @@ export type SceneWithPlayersType = Phaser.Scene & {
 }
 
 export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    cursors: CustomCursorKeys;
     virtualKeys: {
         shift: {
             isDown: boolean;
@@ -118,3 +118,12 @@ export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.I
     enemyId?: string;
     direction?: Direction;
 }
+
+export type CustomCursorKeys = {
+    up?: Phaser.Input.Keyboard.Key;
+    down?: Phaser.Input.Keyboard.Key;
+    left?: Phaser.Input.Keyboard.Key;
+    right?: Phaser.Input.Keyboard.Key;
+    space?: Phaser.Input.Keyboard.Key;
+    shift?: Phaser.Input.Keyboard.Key;
+};

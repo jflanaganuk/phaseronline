@@ -85,7 +85,14 @@ function create(this: SceneWithPlayersAndInputType){
         onEnemyUpdate(enemies, self);
     });
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys({
+        up: Phaser.Input.Keyboard.KeyCodes.W,
+        down: Phaser.Input.Keyboard.KeyCodes.S,
+        left: Phaser.Input.Keyboard.KeyCodes.A,
+        right: Phaser.Input.Keyboard.KeyCodes.D,
+        shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+        space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+    });
     this.virtualKeys = {
         shift: {
             isDown: false
