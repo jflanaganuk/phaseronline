@@ -1,4 +1,4 @@
-import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType } from "../../../shared/types";
+import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType, Direction } from "../../../shared/types";
 
 export function addPlayer(self: SceneWithPlayersType, playerInfo: PlayerType){
     const player: PlayerImageType = self.physics.add.image(playerInfo.x, playerInfo.y, 'player').setScale(2);
@@ -21,24 +21,24 @@ export function handlePlayerInput(self: SceneWithPlayersType, playerId: string, 
             players[id].input = input;
             if (players[id].input.up) {
                 if (players[id].input.left){
-                    players[id].direction = "upLeft";
+                    players[id].direction = Direction.ul;
                 } else if (players[id].input.right) {
-                    players[id].direction = "upRight";
+                    players[id].direction = Direction.ur;
                 } else {
-                    players[id].direction = "up";
+                    players[id].direction = Direction.u;
                 }
             } else if (players[id].input.down) {
                 if (players[id].input.left){
-                    players[id].direction = "downLeft";
+                    players[id].direction = Direction.dl;
                 } else if (players[id].input.right) {
-                    players[id].direction = "downRight";
+                    players[id].direction = Direction.dr;
                 } else {
-                    players[id].direction = "down";
+                    players[id].direction = Direction.d;
                 }
             } else if (players[id].input.left) {
-                players[id].direction = "left";
+                players[id].direction = Direction.l;
             } else if (players[id].input.right) {
-                players[id].direction = "right";
+                players[id].direction = Direction.r;
             }
         }
     })

@@ -1,5 +1,16 @@
 import Phaser from 'phaser';
 
+export enum Direction {
+    u = 'up',
+    ul = 'upLeft',
+    ur = 'upRight',
+    d = 'down',
+    dl = 'downLeft',
+    dr = 'downRight',
+    l = 'left',
+    r = 'right'
+}
+
 export type InputType = {
     left: boolean;
     right: boolean;
@@ -18,7 +29,7 @@ export type PlayerType = {
     destroy?(): void;
     setPosition?(x: number, y: number): void;
     body?: Phaser.Physics.Arcade.Body;
-    direction?: string;
+    direction?: Direction;
     anims?: {
         play(key: string, child: boolean): void;
     };
@@ -32,6 +43,7 @@ export type EnemyType = {
     x: number;
     y: number;
     enemyId: string;
+    direction: Direction;
     destroy?(): void;
     setPosition?(x: number, y: number): void;
     body?: Phaser.Physics.Arcade.Body;
@@ -96,4 +108,5 @@ export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.
 
 export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     enemyId?: string;
+    direction?: string;
 }
