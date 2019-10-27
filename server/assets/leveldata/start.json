@@ -163,6 +163,30 @@
                  "width":0,
                  "x":168,
                  "y":196
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"item",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bow",
+                 "visible":true,
+                 "width":0,
+                 "x":216,
+                 "y":195
+                }, 
+                {
+                 "height":0,
+                 "id":11,
+                 "name":"item",
+                 "point":true,
+                 "rotation":0,
+                 "type":"arrow",
+                 "visible":true,
+                 "width":0,
+                 "x":122,
+                 "y":196
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -184,7 +208,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":10,
+ "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.4",
