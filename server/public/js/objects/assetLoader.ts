@@ -23,6 +23,8 @@ export function assetLoader(context: Phaser.Scene){
 
     context.load.spritesheet('enemySlimeMove', '../assets/maytchPack/spr_blob.png', { frameWidth: 16, frameHeight: 16});
 
+    context.load.image('sword', '../assets/sword.png');
+
     context.load.image('button', '../assets/button.png');
 
     context.load.image("tiles", "../assets/entities-extruded.png");
