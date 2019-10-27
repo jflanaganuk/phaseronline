@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
 import { addEnemy } from './objects/enemyController';
+import { addItem } from './objects/itemsController';
 declare global {
     interface Window { io: any, gameLoaded: any }
 }
@@ -15,6 +16,7 @@ const { io } = window;
 
 const players: PlayersType = {};
 const enemies: EnemiesType = {};
+const items: ItemsType = {};
 
 function preload(this: Phaser.Scene){
     assetLoader(this);
@@ -34,12 +36,14 @@ function create(this: SceneWithPlayersType){
     belowLayer.setCollisionByProperty({collides: true});
     const spawnPoint: SpawnPointType = map.findObject("objects", (obj: {name: string}) => obj.name === "spawnpoint");
     const enemyPoints: EnemySpawnsType = map.filterObjects("objects", (obj: {name: string}) => obj.name === "enemy");
+    const itemPoints: ItemSpawnsType = map.filterObjects("objects", (obj: {name: string}) => obj.name === "item");
 
     this.players = this.physics.add.group();
     this.enemies = this.physics.add.group();
+    this.items = this.physics.add.group();
 
-    enemyPoints.forEach((enemy: SpawnPointType, index: number) => {
-        const stringIndex = String(index);
+    enemyPoints.forEach((enemy: SpawnPointType) => {
+        const stringIndex = enemy.id || "idNotDefined";
         const directionObj: CustomProperty | false = enemy.properties && enemy.properties.filter(property => property.name === "direction")[0] || false;
         enemies[stringIndex] = {
             x: enemy.x ? enemy.x * 2 : 0,
@@ -48,6 +52,18 @@ function create(this: SceneWithPlayersType){
             enemyId: stringIndex
         }
         addEnemy(self, enemies[stringIndex]);
+    });
+
+    itemPoints.forEach((item: SpawnPointType) => {
+        const stringIndex = item.id || "idNotDefined";
+        items[stringIndex] = {
+            x: item.x ? item.x * 2 : 0,
+            y: item.y ? item.y * 2 : 0,
+            type: item.type as ItemTypeEnum,
+            pickedUp: false,
+            itemId: stringIndex
+        }
+        addItem(self, items[stringIndex]);
     });
 
     io.on('connection', function(socket: Socket){
@@ -73,6 +89,7 @@ function create(this: SceneWithPlayersType){
 
         socket.emit('currentPlayers', players);
         socket.emit('currentEnemies', enemies);
+        socket.emit('currentItems', items);
         socket.broadcast.emit('newPlayer', players[id]);
 
         socket.on('disconnect', function(){

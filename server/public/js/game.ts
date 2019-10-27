@@ -1,12 +1,13 @@
 import Phaser from 'phaser';
 import io from 'socket.io-client';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
 import { onPlayerUpdate, displayPlayers } from './objects/playerController';
 import { processInputs } from './objects/inputController';
 import { displayEnemies, onEnemyUpdate } from './objects/enemyController';
+import { displayItem } from './objects/itemsController';
 
 config.scene = {
     preload,
@@ -24,6 +25,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.socket = io();
     this.players = this.add.group();
     this.enemies = this.add.group();
+    this.items = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
     const tileset = map.addTilesetImage("entities", "tiles", 16, 16, 1, 2);
@@ -62,6 +64,12 @@ function create(this: SceneWithPlayersAndInputType){
     this.socket.on('currentEnemies', function(enemies: EnemiesType) {
         Object.keys(enemies).forEach(function (id){
             displayEnemies(self, enemies[id], 'enemy');
+        });
+    });
+
+    this.socket.on('currentItems', function(items: ItemsType) {
+        Object.keys(items).forEach(function (id){
+            displayItem(self, items[id]);
         });
     });
 

@@ -11,6 +11,10 @@ export enum Direction {
     r = 'right'
 }
 
+export enum ItemTypeEnum {
+    sword = 'sword',
+}
+
 export type InputType = {
     left: boolean;
     right: boolean;
@@ -56,9 +60,23 @@ export type EnemiesType = {
     [key: string]: EnemyType;
 }
 
+export type ItemType = {
+    x: number;
+    y: number;
+    itemId: string;
+    type: ItemTypeEnum;
+    pickedUp: boolean;
+    destroy?(): void;
+}
+
+export type ItemsType = {
+    [key:string]: ItemType;
+}
+
 export type SceneWithPlayersType = Phaser.Scene & {
     players: any;
     enemies: any;
+    items: any;
     socket?: any;
 }
 
@@ -93,6 +111,7 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
 };
 
 export type SpawnPointType = Phaser.GameObjects.GameObject & {
+    id?: string;
     x?: number;
     y?: number;
     type?: string;
@@ -106,6 +125,13 @@ export type CustomProperty = {
 }
 
 export type EnemySpawnsType = (Phaser.GameObjects.GameObject & {
+    id?: string;
+    x?: number;
+    y?: number;
+})[];
+
+export type ItemSpawnsType = (Phaser.GameObjects.GameObject & {
+    id?: string;
     x?: number;
     y?: number;
 })[];
@@ -117,6 +143,10 @@ export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.
 export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     enemyId?: string;
     direction?: Direction;
+}
+
+export type ItemImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
+    itemId?: string;
 }
 
 export type CustomCursorKeys = {
