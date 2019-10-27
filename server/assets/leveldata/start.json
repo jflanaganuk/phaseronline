@@ -59,8 +59,98 @@
                  "type":"slime",
                  "visible":true,
                  "width":0,
-                 "x":445,
-                 "y":136
+                 "x":421,
+                 "y":195
+                }, 
+                {
+                 "height":0,
+                 "id":4,
+                 "name":"enemy",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"down"
+                        }],
+                 "rotation":0,
+                 "type":"slime",
+                 "visible":true,
+                 "width":0,
+                 "x":324,
+                 "y":283
+                }, 
+                {
+                 "height":0,
+                 "id":5,
+                 "name":"enemy",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"down"
+                        }],
+                 "rotation":0,
+                 "type":"slime",
+                 "visible":true,
+                 "width":0,
+                 "x":263,
+                 "y":434
+                }, 
+                {
+                 "height":0,
+                 "id":6,
+                 "name":"enemy",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"down"
+                        }],
+                 "rotation":0,
+                 "type":"slime",
+                 "visible":true,
+                 "width":0,
+                 "x":330,
+                 "y":468
+                }, 
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"enemy",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"down"
+                        }],
+                 "rotation":0,
+                 "type":"slime",
+                 "visible":true,
+                 "width":0,
+                 "x":395,
+                 "y":503
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"enemy",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"right"
+                        }],
+                 "rotation":0,
+                 "type":"slime",
+                 "visible":true,
+                 "width":0,
+                 "x":640,
+                 "y":362
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -82,7 +172,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":4,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.4",

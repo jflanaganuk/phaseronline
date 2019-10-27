@@ -152,7 +152,7 @@ function update(this: SceneWithPlayersType){
 
     this.enemies.getChildren().forEach((enemy: EnemyType) => {
         const id = enemy.enemyId;
-        const speed = 30;
+        const speed = 50;
         if (!enemy.body) return;
         if (enemy.direction === Direction.u) enemy.body.setVelocityY(-speed);
         if (enemy.direction === Direction.d) enemy.body.setVelocityY(speed);
