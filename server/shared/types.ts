@@ -95,6 +95,14 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
 export type SpawnPointType = Phaser.GameObjects.GameObject & {
     x?: number;
     y?: number;
+    type?: string;
+    properties?: CustomProperty[];
+}
+
+export type CustomProperty = {
+    name: string;
+    type: string;
+    value: string;
 }
 
 export type EnemySpawnsType = (Phaser.GameObjects.GameObject & {
@@ -108,5 +116,5 @@ export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.
 
 export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     enemyId?: string;
-    direction?: string;
+    direction?: Direction;
 }
