@@ -3,6 +3,7 @@ import { SceneWithPlayersType, EnemyType, EnemyImageType, EnemiesType } from "..
 export function addEnemy(self: SceneWithPlayersType, enemyInfo: EnemyType) {
     const enemy: EnemyImageType = self.physics.add.image(enemyInfo.x, enemyInfo.y, 'enemy').setScale(2);
     enemy.enemyId = enemyInfo.enemyId;
+    enemy.direction = enemyInfo.direction;
     self.enemies.add(enemy);
 }
 

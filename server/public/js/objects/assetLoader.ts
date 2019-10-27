@@ -21,6 +21,8 @@ export function assetLoader(context: Phaser.Scene){
     context.load.spritesheet('playerRollDownRight', '../assets/TopDownCharacter/Character/Character_RollDownRight.png', {frameWidth: 32, frameHeight: 32});
     context.load.spritesheet('playerRollDownLeft', '../assets/TopDownCharacter/Character/Character_RollDownLeft.png', {frameWidth: 32, frameHeight: 32});
 
+    context.load.spritesheet('enemySlimeMove', '../assets/maytchPack/spr_blob.png', { frameWidth: 16, frameHeight: 16});
+
     context.load.image('button', '../assets/button.png');
 
     context.load.image("tiles", "../assets/entities-extruded.png");

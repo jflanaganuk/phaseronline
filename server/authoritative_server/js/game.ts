@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
@@ -43,6 +43,7 @@ function create(this: SceneWithPlayersType){
         enemies[stringIndex] = {
             x: enemy.x ? enemy.x * 2 : 0,
             y: enemy.y ? enemy.y * 2 : 0,
+            direction: Direction.d,
             enemyId: stringIndex
         }
         addEnemy(self, enemies[stringIndex]);
@@ -85,6 +86,27 @@ function create(this: SceneWithPlayersType){
         })
     })
     this.physics.add.collider(this.players, belowLayer);
+    this.physics.add.collider(this.enemies, belowLayer, (obj: Phaser.GameObjects.GameObject & {enemyId?: string}) => {
+        const enemyId = obj.enemyId;
+        this.enemies.getChildren().forEach((enemy: EnemyType) => {
+            if (enemy.enemyId === enemyId) {
+                switch (enemy.direction) {
+                    case Direction.d:
+                        enemy.direction = Direction.u;
+                        break;
+                    case Direction.u:
+                        enemy.direction = Direction.d;
+                        break;
+                    case Direction.l:
+                        enemy.direction = Direction.r;
+                        break;
+                    case Direction.r:
+                        enemy.direction = Direction.l;
+                        break;
+                }
+            }
+        });
+    });
 }
 
 function update(this: SceneWithPlayersType){
@@ -129,8 +151,12 @@ function update(this: SceneWithPlayersType){
 
     this.enemies.getChildren().forEach((enemy: EnemyType) => {
         const id = enemy.enemyId;
+        const speed = 30;
         if (!enemy.body) return;
-        enemy.body.setVelocityY(5);
+        if (enemy.direction === Direction.u) enemy.body.setVelocityY(-speed);
+        if (enemy.direction === Direction.d) enemy.body.setVelocityY(speed);
+        if (enemy.direction === Direction.r) enemy.body.setVelocityX(speed);
+        if (enemy.direction === Direction.l) enemy.body.setVelocityX(-speed);
 
         enemies[id].x = enemy.x;
         enemies[id].y = enemy.y;
