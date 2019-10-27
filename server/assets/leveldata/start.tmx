@@ -1297,7 +1297,10 @@
   <object id="2" name="spawnpoint" x="168" y="131">
    <point/>
   </object>
-  <object id="3" name="Enemy" x="445" y="136">
+  <object id="3" name="enemy" type="slime" x="445" y="136">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

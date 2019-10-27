@@ -47,10 +47,16 @@
                 {
                  "height":0,
                  "id":3,
-                 "name":"Enemy",
+                 "name":"enemy",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"left"
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"slime",
                  "visible":true,
                  "width":0,
                  "x":445,

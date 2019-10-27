@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
@@ -33,17 +33,18 @@ function create(this: SceneWithPlayersType){
     const belowLayer = map.createStaticLayer("below layer", tileset, 0, 0).setScale(2);
     belowLayer.setCollisionByProperty({collides: true});
     const spawnPoint: SpawnPointType = map.findObject("objects", (obj: {name: string}) => obj.name === "spawnpoint");
-    const enemyPoints: EnemySpawnsType = map.filterObjects("objects", (obj: {name: string}) => obj.name === "Enemy");
+    const enemyPoints: EnemySpawnsType = map.filterObjects("objects", (obj: {name: string}) => obj.name === "enemy");
 
     this.players = this.physics.add.group();
     this.enemies = this.physics.add.group();
 
     enemyPoints.forEach((enemy: SpawnPointType, index: number) => {
         const stringIndex = String(index);
+        const directionObj: CustomProperty | false = enemy.properties && enemy.properties.filter(property => property.name === "direction")[0] || false;
         enemies[stringIndex] = {
             x: enemy.x ? enemy.x * 2 : 0,
             y: enemy.y ? enemy.y * 2 : 0,
-            direction: Direction.d,
+            direction: directionObj && directionObj.value as Direction || Direction.d,
             enemyId: stringIndex
         }
         addEnemy(self, enemies[stringIndex]);
