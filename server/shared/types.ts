@@ -13,6 +13,8 @@ export enum Direction {
 
 export enum ItemTypeEnum {
     sword = 'sword',
+    arrow = 'arrow',
+    bow = 'bow',
 }
 
 export type InputType = {
