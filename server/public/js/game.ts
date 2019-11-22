@@ -80,7 +80,12 @@ function create(this: SceneWithPlayersAndInputType){
     this.socket.on('disconnect', function (playerId: string) {
         self.players.getChildren().forEach(function (player: PlayerType) {
             if (playerId === player.playerId) {
-                player.destroy && player.destroy();
+                const spawnEffect = self.add.sprite(player.x, player.y - 10, 'spawnEffect');
+                spawnEffect.anims.playReverse('spawnLightning');
+                spawnEffect.on('animationcomplete', function(this: PlayerType){
+                    this.destroy && this.destroy();
+                    player.destroy && player.destroy();
+                });
             }
         });
     });
