@@ -28,15 +28,18 @@ export function createAnimations(anims: Phaser.Animations.AnimationManager) {
     animWrapper(anims, 'idleUpRight', 'playerMoveUpRight');
 
     animWrapper(anims, 'spawnLightning', 'spawnEffect', 21, 24, 0);
+    animWrapper(anims, 'spawnLightningReverse', 'spawnEffect', 21, 24, 0);
 
     animWrapper(anims, 'enemyMoveIdle', 'enemySlimeMove', 5);
 }
 
 function animWrapper(anims: Phaser.Animations.AnimationManager, key: string, name: string, length: number = 0, frameRate: number = 10, repeat: number = -1) {
-    anims.create({
+    const config: Phaser.Types.Animations.Animation = {
         key,
         frames: anims.generateFrameNumbers(name, {start: 0, end: length}),
         frameRate,
         repeat
-    });
+    };
+
+    anims.create(config);
 }
