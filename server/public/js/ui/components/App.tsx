@@ -1,54 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Inventory } from './Inventory';
-import { InventoryType } from '../../../../shared/types';
+import { EventEmitter } from '../../events';
 
 type AppProps = {
     className: string;
-    socket: SocketIOClient.Socket;
-};
-
-type SharedExposedProps = {
-    inventory: InventoryType[];
-    inventoryOpen: boolean;
-};
-
-const sharedExposed: SharedExposedProps = {
-    inventory: [],
-    inventoryOpen: false,
 };
 
 export const App: React.FC<AppProps> = props => {
 
-    props.socket.on('inventoryToggle', (payload: {playerId: string, opened: boolean, inventory: InventoryType[]}) => {
-        if (payload.playerId === props.socket.id) {
-            sharedExposed.inventory = payload.inventory;
-            sharedExposed.inventoryOpen = payload.opened;
+    const [inventory, setInventory] = useState([]);
+    const [open, setOpen] = useState(false);
 
-            console.log(sharedExposed);
-        }
+    EventEmitter.subscribe('inventoryChange', (event: any) => {
+        setInventory(event.inventory);
+        setOpen(event.opened);
     });
 
     return (
         <div className={props.className}>
-            <AppInner
-                inventory={sharedExposed.inventory}
-                inventoryOpen={sharedExposed.inventoryOpen}
-            />
-        </div>
-    )
-}
-
-const AppInner: React.FC<SharedExposedProps> = props => {
-    console.log(props);
-    return (
-        <>
             <p>Phaser Online</p>
-            {props.inventoryOpen &&
-                <Inventory 
-                    inventory={props.inventory}
-                />
+            {open &&
+                <Inventory inventory={inventory} />
             }
-        </>
+        </div>
     )
 }
 

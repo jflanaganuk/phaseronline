@@ -15,6 +15,7 @@ import { displayItem } from './objects/itemsController';
 import App from './ui/components/App';
 
 import './ui/index.scss';
+import { EventEmitter } from './events';
 
 config.scene = {
     preload,
@@ -117,6 +118,12 @@ function create(this: SceneWithPlayersAndInputType){
         })
     });
 
+    this.socket.on('inventoryToggle', (payload: {playerId: string, opened: boolean, inventory: InventoryType[]}) => {
+        if (payload.playerId === this.socket.id) {
+            EventEmitter.dispatch('inventoryChange', payload);
+        }
+    });
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,
@@ -180,7 +187,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.pickupKeyPressed = false;
     this.inventoryKeyPressed = false;
 
-    ReactDOM.render(<App socket={this.socket} className={"container"}/>, document.getElementById("ui"));
+    ReactDOM.render(<App className={"container"}/>, document.getElementById("ui"));
 }
 
 function update(this: SceneWithPlayersAndInputType){
