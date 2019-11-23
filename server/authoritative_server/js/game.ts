@@ -164,6 +164,11 @@ function create(this: SceneWithPlayersType){
             }
         });
     });
+
+    setInterval(() => {
+        io.emit('playerUpdates', players);
+        io.emit('enemyUpdates', enemies);
+    }, 1000/60);
 }
 
 function update(this: SceneWithPlayersType){
@@ -219,8 +224,6 @@ function update(this: SceneWithPlayersType){
         enemies[id].y = enemy.y;
     });
 
-    io.emit('playerUpdates', players);
-    io.emit('enemyUpdates', enemies);
 }
 
 const game = new Phaser.Game(config);
