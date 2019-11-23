@@ -24,6 +24,7 @@ export type InputType = {
     down: boolean;
     shift: boolean;
     pickup: boolean;
+    inventory: boolean;
 };
 
 export type InventoryType = {
@@ -39,6 +40,8 @@ export type PlayerType = {
     rolling: boolean;
     canRoll: boolean;
     inventory: InventoryType[];
+    inventoryTick: boolean;
+    inventoryOpened: boolean;
     destroy?(): void;
     setPosition?(x: number, y: number): void;
     body?: Phaser.Physics.Arcade.Body;
@@ -97,6 +100,9 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
         },
         pickup: {
             isDown: boolean;
+        },
+        inventory: {
+            isDown: boolean;
         }
     };
     joyStick: any;
@@ -121,6 +127,7 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
     downKeyPressed: boolean;
     shiftKeyPressed: boolean;
     pickupKeyPressed: boolean;
+    inventoryKeyPressed: boolean;
 };
 
 export type SpawnPointType = Phaser.GameObjects.GameObject & {
@@ -170,4 +177,5 @@ export type CustomCursorKeys = {
     space?: Phaser.Input.Keyboard.Key;
     shift?: Phaser.Input.Keyboard.Key;
     pickup?: Phaser.Input.Keyboard.Key;
+    inventory?: Phaser.Input.Keyboard.Key;
 };

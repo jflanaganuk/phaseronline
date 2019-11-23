@@ -81,10 +81,13 @@ function create(this: SceneWithPlayersType){
                 down: false,
                 shift: false,
                 pickup: false,
+                inventory: false,
             },
             rolling: false,
             canRoll: true,
-            inventory: []
+            inventory: [],
+            inventoryTick: true,
+            inventoryOpened: false,
         }
 
         addPlayer(self, players[id]);
@@ -164,6 +167,11 @@ function create(this: SceneWithPlayersType){
             }
         });
     });
+
+    setInterval(() => {
+        io.emit('playerUpdates', players);
+        io.emit('enemyUpdates', enemies);
+    }, 1000/60);
 }
 
 function update(this: SceneWithPlayersType){
@@ -180,6 +188,18 @@ function update(this: SceneWithPlayersType){
             setTimeout(() => {
                 players[id].canRoll = true;
             }, gameState.rollCooldown);
+        }
+
+        if (input.inventory) {
+            if (players[id].inventoryTick) {
+                players[id].inventoryOpened = !players[id].inventoryOpened;
+                players[id].inventoryTick = false;
+                io.emit('inventoryToggle', {playerId: id, opened: players[id].inventoryOpened});
+            }
+        } else {
+            if (!players[id].inventoryTick) {
+                players[id].inventoryTick = true;
+            }
         }
 
         const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
@@ -219,8 +239,6 @@ function update(this: SceneWithPlayersType){
         enemies[id].y = enemy.y;
     });
 
-    io.emit('playerUpdates', players);
-    io.emit('enemyUpdates', enemies);
 }
 
 const game = new Phaser.Game(config);
