@@ -7,6 +7,7 @@ export function processInputs(context: SceneWithPlayersAndInputType){
     const down = context.downKeyPressed;
     const shift = context.shiftKeyPressed;
     const pickup = context.pickupKeyPressed;
+    const inventory = context.inventoryKeyPressed;
 
     if (context.cursors.left && context.cursors.left.isDown || context.joyStickKeys.left && context.joyStickKeys.left.isDown) {
         context.leftKeyPressed = true;
@@ -38,7 +39,13 @@ export function processInputs(context: SceneWithPlayersAndInputType){
         context.pickupKeyPressed = false;
     }
 
-    if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed) {
+    if (context.cursors.inventory && context.cursors.inventory.isDown || context.virtualKeys.inventory.isDown) {
+        context.inventoryKeyPressed = true;
+    } else {
+        context.inventoryKeyPressed = false;
+    }
+
+    if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed || inventory !== context.inventoryKeyPressed) {
         context.socket.emit('playerInput', {
             left: context.leftKeyPressed,
             right: context.rightKeyPressed,
@@ -46,6 +53,7 @@ export function processInputs(context: SceneWithPlayersAndInputType){
             down: context.downKeyPressed,
             shift: context.shiftKeyPressed,
             pickup: context.pickupKeyPressed,
+            inventory: context.inventoryKeyPressed,
         });
     }
     //reset mobile keys
@@ -54,6 +62,9 @@ export function processInputs(context: SceneWithPlayersAndInputType){
             isDown: false
         },
         pickup: {
+            isDown: false
+        },
+        inventory: {
             isDown: false
         }
     }

@@ -116,6 +116,16 @@ function create(this: SceneWithPlayersAndInputType){
         }
     });
 
+    this.socket.on('inventoryToggle', function(payload: {playerId: string, opened: boolean}){
+        if (payload.playerId === self.socket.id) {
+            if (payload.opened) {
+                console.log("Inventory Open");
+            } else {
+                console.log("Inventory Closed");
+            }
+        }
+    });
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,
@@ -124,12 +134,16 @@ function create(this: SceneWithPlayersAndInputType){
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         space: Phaser.Input.Keyboard.KeyCodes.SPACE,
         pickup: Phaser.Input.Keyboard.KeyCodes.E,
+        inventory: Phaser.Input.Keyboard.KeyCodes.I,
     });
     this.virtualKeys = {
         shift: {
             isDown: false
         },
         pickup: {
+            isDown: false
+        },
+        inventory: {
             isDown: false
         }
     }
@@ -173,6 +187,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.downKeyPressed = false;
     this.shiftKeyPressed = false;
     this.pickupKeyPressed = false;
+    this.inventoryKeyPressed = false;
 }
 
 function update(this: SceneWithPlayersAndInputType){
