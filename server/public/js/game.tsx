@@ -132,7 +132,7 @@ function create(this: SceneWithPlayersAndInputType){
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         space: Phaser.Input.Keyboard.KeyCodes.SPACE,
         pickup: Phaser.Input.Keyboard.KeyCodes.E,
-        inventory: Phaser.Input.Keyboard.KeyCodes.I,
+        inventory: Phaser.Input.Keyboard.KeyCodes.Q,
     });
     this.virtualKeys = {
         shift: {
