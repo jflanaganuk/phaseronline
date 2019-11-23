@@ -1,7 +1,7 @@
 const path = require('path');
 const { CheckerPlugin } = require('awesome-typescript-loader');
 module.exports = {
-    entry: './js/game.ts',
+    entry: './js/game.tsx',
     resolve: {
         extensions: [ '.ts', '.tsx', '.js', '.jsx' ]
     },
@@ -11,6 +11,10 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader'
+            },
+            {
+                test: /\.scss$/,
+                loader: ['style-loader', 'css-loader', 'sass-loader']
             }
         ]
     },
