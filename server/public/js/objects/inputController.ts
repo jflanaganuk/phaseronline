@@ -1,10 +1,12 @@
+import { SceneWithPlayersAndInputType } from "../../../shared/types";
 
-export function processInputs(context: any){
+export function processInputs(context: SceneWithPlayersAndInputType){
     const left = context.leftKeyPressed;
     const right = context.rightKeyPressed;
     const up = context.upKeyPressed;
     const down = context.downKeyPressed;
     const shift = context.shiftKeyPressed;
+    const pickup = context.pickupKeyPressed;
 
     if (context.cursors.left && context.cursors.left.isDown || context.joyStickKeys.left && context.joyStickKeys.left.isDown) {
         context.leftKeyPressed = true;
@@ -30,18 +32,28 @@ export function processInputs(context: any){
         context.shiftKeyPressed = false;
     }
 
-    if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed) {
+    if (context.cursors.pickup && context.cursors.pickup.isDown || context.virtualKeys.pickup.isDown) {
+        context.pickupKeyPressed = true;
+    } else {
+        context.pickupKeyPressed = false;
+    }
+
+    if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed) {
         context.socket.emit('playerInput', {
             left: context.leftKeyPressed,
             right: context.rightKeyPressed,
             up: context.upKeyPressed,
             down: context.downKeyPressed,
-            shift: context.shiftKeyPressed
+            shift: context.shiftKeyPressed,
+            pickup: context.pickupKeyPressed,
         });
     }
     //reset mobile keys
     context.virtualKeys = {
         shift: {
+            isDown: false
+        },
+        pickup: {
             isDown: false
         }
     }
