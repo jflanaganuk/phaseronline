@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Inventory } from './Inventory';
 import { EventEmitter } from '../../events';
 
+import './App.scss';
+
 type AppProps = {
     className: string;
 };
@@ -20,7 +22,10 @@ export const App: React.FC<AppProps> = props => {
         <div className={props.className}>
             <p>Phaser Online</p>
             {open &&
-                <Inventory inventory={inventory} />
+                <>
+                    <div className={"inventoryModal"}></div>
+                    <Inventory inventory={inventory} />
+                </>
             }
         </div>
     )

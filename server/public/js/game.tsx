@@ -14,7 +14,6 @@ import { displayItem } from './objects/itemsController';
 
 import App from './ui/components/App';
 
-import './ui/index.scss';
 import { EventEmitter } from './events';
 
 config.scene = {
