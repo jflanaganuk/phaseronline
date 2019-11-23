@@ -1,0 +1,23 @@
+.inventoryItemContainer {
+    border: 1px solid white;
+    position: relative;
+    margin: 5px;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+.inventoryItemAmount {
+    font-size: 12px;
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+}
+
+.inventoryItemImg {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+}
