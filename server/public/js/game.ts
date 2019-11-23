@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import io from 'socket.io-client';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
@@ -14,6 +14,9 @@ config.scene = {
     create,
     update
 }
+declare global {
+    interface Window { debugObj: any }
+}
 
 function preload(this: SceneWithPlayersType){
     assetLoader(this);
@@ -22,6 +25,7 @@ function preload(this: SceneWithPlayersType){
 function create(this: SceneWithPlayersAndInputType){
 
     const self = this;
+    window.debugObj = self;
     this.socket = io();
     this.players = this.add.group();
     this.enemies = this.add.group();
@@ -98,6 +102,20 @@ function create(this: SceneWithPlayersAndInputType){
         onEnemyUpdate(enemies, self);
     });
 
+    this.socket.on('itemRemove', function (itemId: string) {
+        self.items.getChildren().forEach((item: ItemType) => {
+            if (itemId === item.itemId) {
+                item.destroy && item.destroy();
+            }
+        })
+    });
+
+    this.socket.on('inventoryUpdate', function(payload: {playerId: string; inventory: InventoryType[]}){
+        if (payload.playerId === self.socket.id) {
+            console.log(payload.inventory);// TODO - this is only logging so the client can see updates
+        }
+    });
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,
@@ -105,9 +123,13 @@ function create(this: SceneWithPlayersAndInputType){
         right: Phaser.Input.Keyboard.KeyCodes.D,
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+        pickup: Phaser.Input.Keyboard.KeyCodes.E,
     });
     this.virtualKeys = {
         shift: {
+            isDown: false
+        },
+        pickup: {
             isDown: false
         }
     }
@@ -150,6 +172,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.upKeyPressed = false;
     this.downKeyPressed = false;
     this.shiftKeyPressed = false;
+    this.pickupKeyPressed = false;
 }
 
 function update(this: SceneWithPlayersAndInputType){

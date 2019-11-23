@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, PlayerImageType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
 import { addEnemy } from './objects/enemyController';
-import { addItem } from './objects/itemsController';
+import { addItem, removeItem } from './objects/itemsController';
 declare global {
     interface Window { io: any, gameLoaded: any }
 }
@@ -79,10 +79,12 @@ function create(this: SceneWithPlayersType){
                 right: false,
                 up: false,
                 down: false,
-                shift: false
+                shift: false,
+                pickup: false,
             },
             rolling: false,
-            canRoll: true
+            canRoll: true,
+            inventory: []
         }
 
         addPlayer(self, players[id]);
@@ -121,6 +123,43 @@ function create(this: SceneWithPlayersType){
                     case Direction.r:
                         enemy.direction = Direction.l;
                         break;
+                }
+            }
+        });
+    });
+
+    this.physics.add.overlap(this.players, this.items, (player: Phaser.GameObjects.GameObject & {playerId?: string}, item: Phaser.GameObjects.GameObject & {itemId?: string}) => {
+        const itemType = item.type;
+        const itemId = item.itemId;
+        const playerId = player.playerId;
+
+        this.players.getChildren().forEach((player: PlayerType) => {
+            const id = player.playerId;
+            if (id === playerId) {
+                const { input } = players[id];
+                if (input.pickup) {
+                    this.items.getChildren().forEach((item: ItemType) => {
+                        const id = item.itemId;
+                        if (id === itemId) {
+                            const invPlayerId = player.playerId;
+                            if (players[invPlayerId].inventory.find(item => item.itemType === itemType)) {
+                                const index = players[invPlayerId].inventory.findIndex(item => item.itemType === itemType);
+                                players[invPlayerId].inventory[index].amount++;
+                            } else {
+                                players[invPlayerId].inventory.push({
+                                    itemType: itemType,
+                                    amount: 1,
+                                });
+                            }
+                            removeItem(this, itemId);
+                            delete items[id];
+                            io.emit('itemRemove', id);
+                            io.emit('inventoryUpdate', {
+                                playerId: invPlayerId,
+                                inventory: players[invPlayerId].inventory
+                            })
+                        }
+                    });
                 }
             }
         });
