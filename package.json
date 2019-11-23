@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "cd server/authoritative_server && npm run build && cd ../public && npm run build",
+    "build": "cd server/authoritative_server && npm run build && cd ../public && npm run build && cd ../ui && npm run build",
     "start": "npm run build && node server/index.js",
     "init": "lerna init",
     "bootstrap": "lerna bootstrap",
