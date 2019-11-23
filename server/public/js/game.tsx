@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import io from 'socket.io-client';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
@@ -9,13 +12,18 @@ import { processInputs } from './objects/inputController';
 import { displayEnemies, onEnemyUpdate } from './objects/enemyController';
 import { displayItem } from './objects/itemsController';
 
+import App from './ui/components/App';
+
+import './ui/index.scss';
+import { EventEmitter } from './events';
+
 config.scene = {
     preload,
     create,
     update
 }
 declare global {
-    interface Window { debugObj: any }
+    interface Window { exposed: any }
 }
 
 function preload(this: SceneWithPlayersType){
@@ -25,8 +33,8 @@ function preload(this: SceneWithPlayersType){
 function create(this: SceneWithPlayersAndInputType){
 
     const self = this;
-    window.debugObj = self;
     this.socket = io();
+    window.exposed = self;
     this.players = this.add.group();
     this.enemies = this.add.group();
     this.items = this.add.group();
@@ -110,14 +118,9 @@ function create(this: SceneWithPlayersAndInputType){
         })
     });
 
-    this.socket.on('inventoryToggle', function(payload: {playerId: string, opened: boolean, inventory: InventoryType[]}){
-        if (payload.playerId === self.socket.id) {
-            if (payload.opened) {
-                console.log("Inventory Open");
-                console.log(payload.inventory);
-            } else {
-                console.log("Inventory Closed");
-            }
+    this.socket.on('inventoryToggle', (payload: {playerId: string, opened: boolean, inventory: InventoryType[]}) => {
+        if (payload.playerId === this.socket.id) {
+            EventEmitter.dispatch('inventoryChange', payload);
         }
     });
 
@@ -183,6 +186,8 @@ function create(this: SceneWithPlayersAndInputType){
     this.shiftKeyPressed = false;
     this.pickupKeyPressed = false;
     this.inventoryKeyPressed = false;
+
+    ReactDOM.render(<App className={"container"}/>, document.getElementById("ui"));
 }
 
 function update(this: SceneWithPlayersAndInputType){
