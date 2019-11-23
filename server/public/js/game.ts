@@ -110,16 +110,11 @@ function create(this: SceneWithPlayersAndInputType){
         })
     });
 
-    this.socket.on('inventoryUpdate', function(payload: {playerId: string; inventory: InventoryType[]}){
-        if (payload.playerId === self.socket.id) {
-            console.log(payload.inventory);// TODO - this is only logging so the client can see updates
-        }
-    });
-
-    this.socket.on('inventoryToggle', function(payload: {playerId: string, opened: boolean}){
+    this.socket.on('inventoryToggle', function(payload: {playerId: string, opened: boolean, inventory: InventoryType[]}){
         if (payload.playerId === self.socket.id) {
             if (payload.opened) {
                 console.log("Inventory Open");
+                console.log(payload.inventory);
             } else {
                 console.log("Inventory Closed");
             }

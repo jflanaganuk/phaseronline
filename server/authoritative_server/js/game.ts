@@ -157,10 +157,6 @@ function create(this: SceneWithPlayersType){
                             removeItem(this, itemId);
                             delete items[id];
                             io.emit('itemRemove', id);
-                            io.emit('inventoryUpdate', {
-                                playerId: invPlayerId,
-                                inventory: players[invPlayerId].inventory
-                            })
                         }
                     });
                 }
@@ -194,7 +190,7 @@ function update(this: SceneWithPlayersType){
             if (players[id].inventoryTick) {
                 players[id].inventoryOpened = !players[id].inventoryOpened;
                 players[id].inventoryTick = false;
-                io.emit('inventoryToggle', {playerId: id, opened: players[id].inventoryOpened});
+                io.emit('inventoryToggle', {playerId: id, opened: players[id].inventoryOpened, inventory: players[id].inventory});
             }
         } else {
             if (!players[id].inventoryTick) {
