@@ -1,12 +1,20 @@
+$base-spacing: 20px;
+
 .characterContainer {
     border: 1px solid white;
-    padding: 20px;
+    padding: $base-spacing;
     background-color: #b5b5b5;
     position: absolute;
     width: 33vw;
     height: 66vh;
-    right: 20px;
-    top: 20px
+    right: calc(-33vw - 50px);
+    top: $base-spacing;
+    transition: 0.3s;
+    transform: translateX(0px);
+}
+
+.animateInFromRight {
+    transform: translateX(calc(-33vw - 70px));
 }
 
 .characterImageContainer {

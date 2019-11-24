@@ -22,12 +22,10 @@ export const App: React.FC<AppProps> = props => {
     return (
         <div className={props.className}>
             {open &&
-                <>
-                    <div className={"inventoryModal"}></div>
-                    <Inventory inventory={inventory} />
-                    <Character/>
-                </>
+            <div className={"inventoryModal"}></div>
             }
+            <Inventory inventory={inventory} open={open} />
+            <Character open={open} />
         </div>
     )
 }
