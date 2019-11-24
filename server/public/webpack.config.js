@@ -20,7 +20,9 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)$/i,
                 loader: 'file-loader',
                 options: {
-                    name: 'assets/[name].[ext]',
+                    publicPath: (_url, resourcePath, context) => {
+                        return path.relative(context, resourcePath);
+                    }
                 }
             }
         ]

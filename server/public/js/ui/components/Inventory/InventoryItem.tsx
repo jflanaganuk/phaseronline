@@ -11,7 +11,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = props => {
         <div className={"inventoryItemContainer"}>
             <img 
                 className={"inventoryItemImg"}
-                src={require(`../../../../assets/${props.type}.png`)} 
+                src={require(`../../../../../assets/${props.type}.png`)} 
                 alt={props.type}
             />
             <p className={"inventoryItemAmount"}>{props.amount}</p>
