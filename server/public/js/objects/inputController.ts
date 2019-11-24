@@ -1,6 +1,6 @@
 import { SceneWithPlayersAndInputType } from "../../../shared/types";
 
-export function processInputs(context: SceneWithPlayersAndInputType){
+export function processInputs(context: SceneWithPlayersAndInputType, lockCharacter: boolean){
     const left = context.leftKeyPressed;
     const right = context.rightKeyPressed;
     const up = context.upKeyPressed;
@@ -45,7 +45,17 @@ export function processInputs(context: SceneWithPlayersAndInputType){
         context.inventoryKeyPressed = false;
     }
 
-    if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed || inventory !== context.inventoryKeyPressed) {
+    if (lockCharacter) {
+        context.socket.emit('playerInput', {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            shift: false,
+            pickup: false,
+            inventory: context.inventoryKeyPressed
+        });
+    } else if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed || inventory !== context.inventoryKeyPressed) {
         context.socket.emit('playerInput', {
             left: context.leftKeyPressed,
             right: context.rightKeyPressed,

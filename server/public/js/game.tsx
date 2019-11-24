@@ -14,7 +14,6 @@ import { displayItem } from './objects/itemsController';
 
 import App from './ui/components/App';
 
-import './ui/index.scss';
 import { EventEmitter } from './events';
 
 config.scene = {
@@ -29,6 +28,8 @@ declare global {
 function preload(this: SceneWithPlayersType){
     assetLoader(this);
 }
+
+let lockCharacter = false;
 
 function create(this: SceneWithPlayersAndInputType){
 
@@ -121,6 +122,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.socket.on('inventoryToggle', (payload: {playerId: string, opened: boolean, inventory: InventoryType[]}) => {
         if (payload.playerId === this.socket.id) {
             EventEmitter.dispatch('inventoryChange', payload);
+            lockCharacter = payload.opened;
         }
     });
 
@@ -191,7 +193,7 @@ function create(this: SceneWithPlayersAndInputType){
 }
 
 function update(this: SceneWithPlayersAndInputType){
-    processInputs(this);
+    processInputs(this, lockCharacter);
 }
 
 const game = new Phaser.Game(config);
