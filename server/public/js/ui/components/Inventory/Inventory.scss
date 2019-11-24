@@ -1,10 +1,18 @@
+$base-spacing: 20px;
+
 .inventoryContainer {
     border: 1px solid white;
-    padding: 20px;
+    padding: $base-spacing;
     background-color: #b5b5b5;
     position: absolute;
     width: 33vw;
     height: 66vh;
-    left: 20px;
-    top: 20px;
+    left: calc(-33vw - 50px);
+    top: $base-spacing;
+    transition: 0.3s;
+    transform: translateX(0px);
+}
+
+.animateInFromLeft {
+    transform: translateX(calc(33vw + 70px));
 }
