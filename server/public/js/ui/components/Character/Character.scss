@@ -1,0 +1,27 @@
+.characterContainer {
+    border: 1px solid white;
+    padding: 20px;
+    background-color: #b5b5b5;
+    position: absolute;
+    width: 33vw;
+    height: 66vh;
+    right: 20px;
+    top: 20px
+}
+
+.characterImageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.characterImage {
+    width: 75%;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+}
