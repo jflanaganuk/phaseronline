@@ -10,6 +10,7 @@ type InventoryItemProps = {
     damage: number;
     speed: number;
     amount: number | false;
+    equipType: "main" | "ranged" | "ammo";
 }
 
 export const InventoryItem: React.FC<InventoryItemProps> = props => {
@@ -18,7 +19,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = props => {
     const [mouseX, setMouseX] = useState(0);
     const [mouseY, setMouseY] = useState(0);
     const [{ isDragging }, drag] = useDrag({
-        item: { type: ItemTypes.ITEM, invType: props.type, amount: props.amount },
+        item: { type: props.equipType, invType: props.type, amount: props.amount },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
         })

@@ -9,12 +9,15 @@ export const CharacterWeaponRow: React.FC<CharacterWeaponRowProps> = props => {
         <div className="characterWeaponRowContainer">
             <CharacterWeapon
                 hasEquipped={false}
+                equipType={'main'}
             />
             <CharacterWeapon
                 hasEquipped={false}
+                equipType={'ranged'}
             />
             <CharacterWeapon
                 hasEquipped={false}
+                equipType={'ammo'}
             />
         </div>
     )
