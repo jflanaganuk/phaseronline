@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="22">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="37">
  <tileset firstgid="1" name="entities" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../entities.png" width="256" height="256"/>
   <tile id="0">
@@ -1339,37 +1339,40 @@
   <object id="10" name="item" type="bow" x="216" y="195">
    <point/>
   </object>
-  <object id="11" name="item" type="arrow" x="122" y="196">
+  <object id="15" name="item" type="arrow" x="123.125" y="193.875">
    <point/>
   </object>
-  <object id="12" name="item" type="arrow" x="119" y="196.25">
+  <object id="26" name="item" type="sword" x="118.5" y="467">
    <point/>
   </object>
-  <object id="13" name="item" type="arrow" x="115.5" y="196.125">
+  <object id="27" name="item" type="bow" x="118.5" y="505.5">
    <point/>
   </object>
-  <object id="14" name="item" type="arrow" x="112" y="196.375">
+  <object id="28" name="item" type="arrow" x="120.625" y="193.875">
    <point/>
   </object>
-  <object id="15" name="item" type="arrow" x="108.125" y="196.375">
+  <object id="29" name="item" type="arrow" x="118.125" y="193.875">
    <point/>
   </object>
-  <object id="16" name="item" type="arrow" x="110.875" y="425.5">
+  <object id="30" name="item" type="arrow" x="114.625" y="193.875">
    <point/>
   </object>
-  <object id="17" name="item" type="arrow" x="114.75" y="425.5">
+  <object id="31" name="item" type="arrow" x="112.625" y="193.875">
    <point/>
   </object>
-  <object id="18" name="item" type="arrow" x="121.75" y="425.375">
+  <object id="32" name="item" type="arrow" x="111.125" y="421.875">
    <point/>
   </object>
-  <object id="19" name="item" type="arrow" x="118.25" y="425.25">
+  <object id="33" name="item" type="arrow" x="113.125" y="421.875">
    <point/>
   </object>
-  <object id="20" name="item" type="arrow" x="124.75" y="425.125">
+  <object id="34" name="item" type="arrow" x="116.625" y="421.875">
    <point/>
   </object>
-  <object id="21" name="item" type="bow" x="115" y="465.5">
+  <object id="35" name="item" type="arrow" x="119.125" y="421.875">
+   <point/>
+  </object>
+  <object id="36" name="item" type="arrow" x="121.625" y="421.875">
    <point/>
   </object>
  </objectgroup>

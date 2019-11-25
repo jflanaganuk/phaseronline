@@ -9,6 +9,17 @@ type InventoryProps = {
     open: boolean;
 };
 
+type ItemDatabaseEntry = {
+    item_name: string;
+    readable_name: string;
+    description: string;
+    damage: number;
+    speed: number;
+    stackable: boolean;
+}
+
+const item_database: {[key: string]: ItemDatabaseEntry} = require('../../../../../shared/item_database.json');
+
 export const Inventory: React.FC<InventoryProps> = props => {
 
     return (
@@ -19,7 +30,19 @@ export const Inventory: React.FC<InventoryProps> = props => {
             {props.open &&
             <>
                 <h2>Inventory</h2>
-                {props.inventory.map(({itemType, amount}) => <InventoryItem key={itemType} amount={amount} type={itemType} />)}
+                {props.inventory.map(({itemType, amount}) => {
+                    if (item_database[itemType].stackable) {
+                        return <InventoryItem key={itemType} amount={amount} type={itemType} />
+                    } else {
+                        return (
+                            <>
+                                {Array.from(Array(amount)).map((_, index) => {
+                                    return <InventoryItem key={`${itemType}${index}`} amount={false} type={itemType}/>
+                                })}
+                            </>
+                        )
+                    }
+                })}
             </>
             }
         </div>
