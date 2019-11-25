@@ -16,6 +16,7 @@ type ItemDatabaseEntry = {
     damage: number;
     speed: number;
     stackable: boolean;
+    equip_type: "main" | "ranged" | "ammo";
 }
 
 const item_database: {[key: string]: ItemDatabaseEntry} = require('../../../../../shared/item_database.json');
@@ -40,6 +41,7 @@ export const Inventory: React.FC<InventoryProps> = props => {
                                     description={item_database[itemType].description}
                                     damage={item_database[itemType].damage}
                                     speed={item_database[itemType].speed}
+                                    equipType={item_database[itemType].equip_type}
                                 />
                     } else {
                         return (
@@ -53,6 +55,7 @@ export const Inventory: React.FC<InventoryProps> = props => {
                                                 description={item_database[itemType].description}
                                                 damage={item_database[itemType].damage}
                                                 speed={item_database[itemType].speed}
+                                                equipType={item_database[itemType].equip_type}
                                             />
                                 })}
                             </>

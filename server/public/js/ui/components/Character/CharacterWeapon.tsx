@@ -6,6 +6,7 @@ import { EventEmitter } from '../../../events';
 
 type CharacterWeaponProps = {
     hasEquipped: boolean;
+    equipType: 'main' | 'ranged' | 'ammo';
     type?: string;
     amount?: number;
 }
@@ -19,7 +20,7 @@ type DraggedItemProps = {
 export const CharacterWeapon: React.FC<CharacterWeaponProps> = props => {
 
     const [, drop] = useDrop({
-        accept: [ItemTypes.ITEM],
+        accept: props.equipType,
         drop: (obj: DraggedItemProps) => equipItem(obj)
     });
 
