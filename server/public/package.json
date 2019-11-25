@@ -19,6 +19,8 @@
     "file-loader": "^4.3.0",
     "phaser": "^3.17.0",
     "react": "^16.12.0",
+    "react-dnd": "^9.5.0",
+    "react-dnd-html5-backend": "^9.5.0",
     "react-dom": "^16.12.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
