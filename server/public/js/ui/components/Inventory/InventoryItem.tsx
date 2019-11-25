@@ -5,7 +5,7 @@ import { ItemTypes } from '../App';
 
 type InventoryItemProps = {
     type: string;
-    amount: number;
+    amount: number | false;
 }
 
 export const InventoryItem: React.FC<InventoryItemProps> = props => {
@@ -24,7 +24,9 @@ export const InventoryItem: React.FC<InventoryItemProps> = props => {
                 src={require(`../../../../../assets/${props.type}.png`)} 
                 alt={props.type}
             />
-            <p className={"inventoryItemAmount"}>{props.amount}</p>
+            {Boolean(props.amount) &&
+                <p className={"inventoryItemAmount"}>{props.amount}</p>
+            }
         </div>
     )
 }

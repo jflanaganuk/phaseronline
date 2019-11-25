@@ -1,0 +1,26 @@
+{
+    "sword": {
+        "item_name": "common_sword",
+        "readable_name": "Common Sword",
+        "description": "A sword for stabbing things with.",
+        "damage": 5,
+        "speed": 10,
+        "stackable": false
+    },
+    "bow": {
+        "item_name": "common_bow",
+        "readable_name": "Common Bow",
+        "description": "A worn bow, it should be able to shoot an arrow or two though...",
+        "damage": 7,
+        "speed": 2,
+        "stackable": false
+    },
+    "arrow": {
+        "item_name": "rough_arrow",
+        "readable_name": "Rough Arrow",
+        "description": "A shitty arrow you found on the floor, how good do you really think it's gonna be?!",
+        "damage": 1,
+        "speed": 1,
+        "stackable": true
+    }
+}

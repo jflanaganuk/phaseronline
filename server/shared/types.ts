@@ -30,6 +30,7 @@ export type InputType = {
 export type InventoryType = {
     itemType: string;
     amount: number;
+    item_name?: string;
 }
 
 export type PlayerType = {
