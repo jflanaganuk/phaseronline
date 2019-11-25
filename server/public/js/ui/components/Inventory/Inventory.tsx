@@ -32,12 +32,28 @@ export const Inventory: React.FC<InventoryProps> = props => {
                 <h2>Inventory</h2>
                 {props.inventory.map(({itemType, amount}) => {
                     if (item_database[itemType].stackable) {
-                        return <InventoryItem key={itemType} amount={amount} type={itemType} />
+                        return <InventoryItem 
+                                    key={itemType} 
+                                    amount={amount} 
+                                    type={itemType} 
+                                    title={item_database[itemType].readable_name}
+                                    description={item_database[itemType].description}
+                                    damage={item_database[itemType].damage}
+                                    speed={item_database[itemType].speed}
+                                />
                     } else {
                         return (
                             <>
                                 {Array.from(Array(amount)).map((_, index) => {
-                                    return <InventoryItem key={`${itemType}${index}`} amount={false} type={itemType}/>
+                                    return <InventoryItem 
+                                                key={`${itemType}${index}`} 
+                                                amount={false} 
+                                                type={itemType}
+                                                title={item_database[itemType].readable_name}
+                                                description={item_database[itemType].description}
+                                                damage={item_database[itemType].damage}
+                                                speed={item_database[itemType].speed}
+                                            />
                                 })}
                             </>
                         )
