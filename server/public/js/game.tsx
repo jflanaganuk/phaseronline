@@ -126,6 +126,10 @@ function create(this: SceneWithPlayersAndInputType){
         }
     });
 
+    EventEmitter.subscribe('equipItem', (event:any) => {
+        console.log(event)
+    })
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,
