@@ -24,3 +24,12 @@
     height: 40px;
     margin: 5px;
 }
+
+.inventoryItemTooltip {
+    position: absolute;
+    width: 200px;
+    border: 1px solid white;
+    background-color: #606060;
+    padding: 10px;
+    z-index: 1;
+}
