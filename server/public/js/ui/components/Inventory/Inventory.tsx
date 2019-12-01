@@ -1,23 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import './Inventory.scss';
-import { InventoryType } from '../../../../../shared/types';
+import { InventoryType, ItemDatabaseEntry } from '../../../../../shared/types';
 import { InventoryItem } from './InventoryItem';
 
 type InventoryProps = {
     inventory: InventoryType[];
     open: boolean;
 };
-
-type ItemDatabaseEntry = {
-    item_name: string;
-    readable_name: string;
-    description: string;
-    damage: number;
-    speed: number;
-    stackable: boolean;
-    equip_type: "main" | "ranged" | "ammo";
-}
 
 const item_database: {[key: string]: ItemDatabaseEntry} = require('../../../../../shared/item_database.json');
 
