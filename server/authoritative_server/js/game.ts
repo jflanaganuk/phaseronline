@@ -114,7 +114,8 @@ function create(this: SceneWithPlayersType){
         })
 
         socket.on('equipItemToPlayer', function(payload: ItemPayload){
-            handleEquipItem(self, socket.id, payload, players);
+            const success: boolean = handleEquipItem(self, socket.id, payload, players);
+            if (success) socket.emit('equippedItemToPlayer', {id: socket.id, item: payload});
         });
     })
     this.physics.add.collider(this.players, belowLayer);

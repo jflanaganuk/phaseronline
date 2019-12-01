@@ -130,6 +130,12 @@ function create(this: SceneWithPlayersAndInputType){
         this.socket.emit('equipItemToPlayer', event);
     })
 
+    this.socket.on('equippedItemToPlayer', (event: {id: string; item: ItemPayload}) => {
+        if (event.id === this.socket.id) {
+            EventEmitter.dispatch('equipmentChange', event.item);
+        }
+    });
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,

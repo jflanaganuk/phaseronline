@@ -46,8 +46,9 @@ export function handlePlayerInput(self: SceneWithPlayersType, playerId: string, 
 
 const itemDatabase = require('../../../shared/item_database.json');
 
-export function handleEquipItem(self: SceneWithPlayersType, playerId: string, item: ItemPayload, players: PlayersType) {
-    self.players.getChildren().forEach(function(player: PlayerType){
+export function handleEquipItem(self: SceneWithPlayersType, playerId: string, item: ItemPayload, players: PlayersType): boolean {
+    let success = false;
+    self.players.getChildren().forEach((player: PlayerType) => {
         if (player.playerId === playerId) {
             const id = player.playerId;
             const itemInfo = itemDatabase[item.type];
@@ -60,7 +61,8 @@ export function handleEquipItem(self: SceneWithPlayersType, playerId: string, it
                 speed: itemInfo.speed,
                 stackable: itemInfo.stackable
             }
-            console.log(players[id]);
+            success = true;
         }
     });
+    return success;
 }
