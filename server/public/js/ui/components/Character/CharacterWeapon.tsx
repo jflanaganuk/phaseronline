@@ -7,8 +7,8 @@ import { EventEmitter } from '../../../events';
 type CharacterWeaponProps = {
     hasEquipped: boolean;
     equipType: 'main' | 'ranged' | 'ammo';
-    type?: string;
-    amount?: number;
+    type: string | false;
+    amount: number | false;
 }
 
 type DraggedItemProps = {
@@ -30,14 +30,16 @@ export const CharacterWeapon: React.FC<CharacterWeaponProps> = props => {
     
     return (
         <div className="characterWeaponContainer" ref={drop}>
-            {props.hasEquipped &&
+            {props.hasEquipped && props.type &&
             <>
                 <img 
                     className="characterWeaponImg"
                     src={require(`../../../../../assets/${props.type}.png`)} 
                     alt={props.type} 
                 />
-                <p className="characterWeaponAmount">{props.amount}</p>
+                {props.amount &&
+                    <p className="characterWeaponAmount">{props.amount}</p>
+                }
             </>
             }
         </div>

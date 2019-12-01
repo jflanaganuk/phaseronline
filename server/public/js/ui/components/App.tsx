@@ -16,14 +16,44 @@ export const ItemTypes = {
     ITEM: 'item'
 }
 
+export type EquipmentTypeUI = {
+    main: {
+        type: string;
+        amount: number | false;
+    } | false;
+    ranged: {
+        type: string;
+        amount: number | false;
+    } | false;
+    ammo: {
+        type: string;
+        amount: number | false;
+    } | false;
+}
+
 export const App: React.FC<AppProps> = props => {
 
     const [inventory, setInventory] = useState([]);
     const [open, setOpen] = useState(false);
+    const [equipment, setEquipment] = useState<EquipmentTypeUI>({
+        main: false,
+        ranged: false,
+        ammo: false
+    });
 
     EventEmitter.subscribe('inventoryChange', (event: any) => {
         setInventory(event.inventory);
         setOpen(event.opened);
+    });
+
+    EventEmitter.subscribe('equipmentChange', (event: any) => {
+        setEquipment({
+            ...equipment,
+            [event.kind]: {
+                type: event.type,
+                amount: event.amount
+            }
+        })
     });
 
     return (
@@ -33,7 +63,7 @@ export const App: React.FC<AppProps> = props => {
                 <div className={"inventoryModal"}></div>
             }
                 <Inventory inventory={inventory} open={open} />
-                <Character open={open} />
+                <Character open={open} equipment={equipment} />
             </div>
         </DndProvider>
     )

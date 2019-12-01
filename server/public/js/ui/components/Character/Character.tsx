@@ -2,9 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 import './Character.scss';
 import { CharacterWeaponRow } from './CharacterWeaponRow';
+import { EquipmentTypeUI } from '../App';
 
 type CharacterProps = {
     open: boolean;
+    equipment: EquipmentTypeUI;
 };
 
 export const Character: React.FC<CharacterProps> = props => {
@@ -24,7 +26,7 @@ export const Character: React.FC<CharacterProps> = props => {
                         alt="Character Image" 
                     />
                 </div>
-                <CharacterWeaponRow/>
+                <CharacterWeaponRow equipment={props.equipment}/>
             </>
             }
         </div>
