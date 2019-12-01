@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
-import { addPlayer, removePlayer, handlePlayerInput } from './objects/playerController';
+import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem } from './objects/playerController';
 import { addEnemy } from './objects/enemyController';
 import { addItem, removeItem } from './objects/itemsController';
 declare global {
@@ -88,6 +88,11 @@ function create(this: SceneWithPlayersType){
             inventory: [],
             inventoryTick: true,
             inventoryOpened: false,
+            equipment: {
+                ammo: false,
+                main: false,
+                ranged: false
+            }
         }
 
         addPlayer(self, players[id]);
@@ -107,6 +112,10 @@ function create(this: SceneWithPlayersType){
         socket.on('playerInput', function (inputData: InputType) {
             handlePlayerInput(self, socket.id, inputData, players);
         })
+
+        socket.on('equipItemToPlayer', function(payload: ItemPayload){
+            handleEquipItem(self, socket.id, payload, players);
+        });
     })
     this.physics.add.collider(this.players, belowLayer);
     this.physics.add.collider(this.enemies, belowLayer, (obj: Phaser.GameObjects.GameObject & {enemyId?: string}) => {

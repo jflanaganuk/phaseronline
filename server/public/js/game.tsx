@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
@@ -126,8 +126,8 @@ function create(this: SceneWithPlayersAndInputType){
         }
     });
 
-    EventEmitter.subscribe('equipItem', (event:any) => {
-        console.log(event)
+    EventEmitter.subscribe('equipItem', (event: ItemPayload) => {
+        this.socket.emit('equipItemToPlayer', event);
     })
 
     this.cursors = this.input.keyboard.addKeys({

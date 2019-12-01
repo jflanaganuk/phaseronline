@@ -25,7 +25,7 @@ export const CharacterWeapon: React.FC<CharacterWeaponProps> = props => {
     });
 
     const equipItem = (obj: DraggedItemProps) => {
-        EventEmitter.dispatch('equipItem', {type: obj.invType, amount: obj.amount});
+        EventEmitter.dispatch('equipItem', {kind: obj.type, type: obj.invType, amount: obj.amount});
     }
     
     return (

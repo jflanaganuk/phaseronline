@@ -33,6 +33,12 @@ export type InventoryType = {
     item_name?: string;
 }
 
+export type EquipmentType = {
+    main: ItemDatabaseEntry | false;
+    ranged: ItemDatabaseEntry | false;
+    ammo: ItemDatabaseEntry | false;
+}
+
 export type PlayerType = {
     x: number;
     y: number;
@@ -43,6 +49,7 @@ export type PlayerType = {
     inventory: InventoryType[];
     inventoryTick: boolean;
     inventoryOpened: boolean;
+    equipment: EquipmentType;
     destroy?(): void;
     setPosition?(x: number, y: number): void;
     body?: Phaser.Physics.Arcade.Body;
@@ -51,6 +58,12 @@ export type PlayerType = {
         play(key: string, child: boolean): void;
     };
 }
+
+export type ItemPayload = {
+    kind: 'main' | 'ranged' | 'ammo';
+    type: string;
+    amount: number | false;
+} 
 
 export type PlayersType = {
     [key: string]: PlayerType
@@ -84,6 +97,16 @@ export type ItemType = {
 
 export type ItemsType = {
     [key:string]: ItemType;
+}
+
+export type ItemDatabaseEntry = {
+    item_name: string;
+    readable_name: string;
+    description: string;
+    damage: number;
+    speed: number;
+    stackable: boolean;
+    equip_type: "main" | "ranged" | "ammo";
 }
 
 export type SceneWithPlayersType = Phaser.Scene & {

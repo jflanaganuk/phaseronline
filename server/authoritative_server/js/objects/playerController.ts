@@ -1,4 +1,4 @@
-import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType, Direction } from "../../../shared/types";
+import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType, Direction, ItemPayload } from "../../../shared/types";
 
 export function addPlayer(self: SceneWithPlayersType, playerInfo: PlayerType){
     const player: PlayerImageType = self.physics.add.image(playerInfo.x, playerInfo.y, 'player').setScale(2);
@@ -42,4 +42,25 @@ export function handlePlayerInput(self: SceneWithPlayersType, playerId: string, 
             }
         }
     })
+}
+
+const itemDatabase = require('../../../shared/item_database.json');
+
+export function handleEquipItem(self: SceneWithPlayersType, playerId: string, item: ItemPayload, players: PlayersType) {
+    self.players.getChildren().forEach(function(player: PlayerType){
+        if (player.playerId === playerId) {
+            const id = player.playerId;
+            const itemInfo = itemDatabase[item.type];
+            players[id].equipment[item.kind] = {
+                damage: itemInfo.damage,
+                description: itemInfo.description,
+                equip_type: item.kind,
+                item_name: item.type,
+                readable_name: itemInfo.readable_name,
+                speed: itemInfo.speed,
+                stackable: itemInfo.stackable
+            }
+            console.log(players[id]);
+        }
+    });
 }
