@@ -82,9 +82,12 @@ function create(this: SceneWithPlayersType){
                 shift: false,
                 pickup: false,
                 inventory: false,
+                swing: false,
             },
             rolling: false,
             canRoll: true,
+            swinging: false,
+            canSwing: true,
             inventory: [],
             inventoryTick: true,
             inventoryOpened: false,
@@ -183,7 +186,7 @@ function update(this: SceneWithPlayersType){
 
         this.players.getChildren().forEach((player: PlayerType) => {
             const id = player.playerId;
-            const { input, rolling, canRoll } = players[id];
+            const { input, rolling, canRoll, swinging, canSwing } = players[id];
             if (input.shift && !rolling && canRoll) {
                 players[id].rolling = true;
                 players[id].canRoll = false;
@@ -193,6 +196,17 @@ function update(this: SceneWithPlayersType){
                 setTimeout(() => {
                     players[id].canRoll = true;
                 }, gameState.rollCooldown);
+            }
+
+            if (input.swing && !swinging && canSwing) {
+                players[id].swinging = true;
+                players[id].canSwing = false;
+                setTimeout(() => {
+                    players[id].swinging = false;
+                }, gameState.swingLength);
+                setTimeout(() => {
+                    players[id].canSwing = true;
+                }, gameState.swingCooldown);
             }
 
             if (input.inventory) {
@@ -209,21 +223,24 @@ function update(this: SceneWithPlayersType){
 
             const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
             if (!player.body) return;
-            if (input.left) {
-                player.body.setVelocityX(-speed);
-            } else if (input.right) {
-                player.body.setVelocityX(speed);
-            } else {
-                player.body.setVelocityX(0);
-            }
 
-            if (input.up) {
-                player.body.setVelocityY(-speed);
-            } else if (input.down) {
-                player.body.setVelocityY(speed);
-            } else {
-                player.body.setVelocityY(0);
+            let xSpeed = 0;
+            if (input.left) {
+                xSpeed -= speed;
             }
+            if (input.right) {
+                xSpeed += speed;
+            }
+            player.body.setVelocityX(xSpeed);
+
+            let ySpeed = 0;
+            if (input.up) {
+                ySpeed -= speed;
+            } 
+            if (input.down) {
+                ySpeed += speed;
+            } 
+            player.body.setVelocityY(ySpeed);
 
             player.body.velocity.normalize().scale(speed);
 

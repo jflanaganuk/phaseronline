@@ -21,6 +21,11 @@ export function assetLoader(context: Phaser.Scene){
     context.load.spritesheet('playerRollDownRight', '../assets/TopDownCharacter/Character/Character_RollDownRight.png', {frameWidth: 32, frameHeight: 32});
     context.load.spritesheet('playerRollDownLeft', '../assets/TopDownCharacter/Character/Character_RollDownLeft.png', {frameWidth: 32, frameHeight: 32});
 
+    context.load.spritesheet('playerSwipeUp', '../assets/TopDownCharacter/Character/Character_SlashUpRight.png', { frameWidth: 32, frameHeight: 32});
+    context.load.spritesheet('playerSwipeLeft', '../assets/TopDownCharacter/Character/Character_SlashUpLeft.png', { frameWidth: 32, frameHeight: 32});
+    context.load.spritesheet('playerSwipeDown', '../assets/TopDownCharacter/Character/Character_SlashDownLeft.png', { frameWidth: 32, frameHeight: 32});
+    context.load.spritesheet('playerSwipeRight', '../assets/TopDownCharacter/Character/Character_SlashDownRight.png', { frameWidth: 32, frameHeight: 32});
+
     context.load.spritesheet('enemySlimeMove', '../assets/maytchPack/spr_blob.png', { frameWidth: 16, frameHeight: 16});
 
     context.load.image('sword', '../assets/sword.png');

@@ -142,10 +142,11 @@ function create(this: SceneWithPlayersAndInputType){
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
-        space: Phaser.Input.Keyboard.KeyCodes.SPACE,
         pickup: Phaser.Input.Keyboard.KeyCodes.E,
         inventory: Phaser.Input.Keyboard.KeyCodes.Q,
+        swing: Phaser.Input.Keyboard.KeyCodes.SPACE,
     });
+
     this.virtualKeys = {
         shift: {
             isDown: false
@@ -155,7 +156,10 @@ function create(this: SceneWithPlayersAndInputType){
         },
         inventory: {
             isDown: false
-        }
+        },
+        swing: {
+            isDown: false
+        },
     }
     //Test for devices
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
@@ -198,12 +202,18 @@ function create(this: SceneWithPlayersAndInputType){
     this.shiftKeyPressed = false;
     this.pickupKeyPressed = false;
     this.inventoryKeyPressed = false;
+    this.swingKeyPressed = false;
 
     ReactDOM.render(<App className={"container"}/>, document.getElementById("ui"));
 }
 
+let previousTimeStamp = 0;
+const fps = 1000/20;
 function update(this: SceneWithPlayersAndInputType){
-    processInputs(this, lockCharacter);
+    if ((previousTimeStamp + fps) < performance.now()) {
+        previousTimeStamp += fps;
+        processInputs(this, lockCharacter);
+    }
 }
 
 const game = new Phaser.Game(config);

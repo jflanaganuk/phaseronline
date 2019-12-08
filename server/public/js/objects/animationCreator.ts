@@ -18,6 +18,11 @@ export function createAnimations(anims: Phaser.Animations.AnimationManager) {
     animWrapper(anims, 'rollDownRight', 'playerRollDownRight', 3);
     animWrapper(anims, 'rollDownLeft', 'playerRollDownLeft', 3);
 
+    animWrapper(anims, 'swipeUp', 'playerSwipeUp', 3);
+    animWrapper(anims, 'swipeLeft', 'playerSwipeLeft', 3);
+    animWrapper(anims, 'swipeDown', 'playerSwipeDown', 3);
+    animWrapper(anims, 'swipeRight', 'playerSwipeRight', 3);
+
     animWrapper(anims, 'idleLeft', 'playerMoveLeft');
     animWrapper(anims, 'idleRight', 'playerMoveRight');
     animWrapper(anims, 'idleUp', 'playerMoveUp');

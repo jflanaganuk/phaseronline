@@ -1,29 +1,27 @@
 import { SceneWithPlayersAndInputType } from "../../../shared/types";
 
 export function processInputs(context: SceneWithPlayersAndInputType, lockCharacter: boolean){
-    const left = context.leftKeyPressed;
-    const right = context.rightKeyPressed;
-    const up = context.upKeyPressed;
-    const down = context.downKeyPressed;
-    const shift = context.shiftKeyPressed;
-    const pickup = context.pickupKeyPressed;
-    const inventory = context.inventoryKeyPressed;
-
     if (context.cursors.left && context.cursors.left.isDown || context.joyStickKeys.left && context.joyStickKeys.left.isDown) {
         context.leftKeyPressed = true;
-    } else if (context.cursors.right && context.cursors.right.isDown || context.joyStickKeys.right && context.joyStickKeys.right.isDown) {
-        context.rightKeyPressed = true;
     } else {
         context.leftKeyPressed = false;
+    }  
+    
+    if (context.cursors.right && context.cursors.right.isDown || context.joyStickKeys.right && context.joyStickKeys.right.isDown) {
+        context.rightKeyPressed = true;
+    } else {
         context.rightKeyPressed = false;
     }
 
     if (context.cursors.up && context.cursors.up.isDown || context.joyStickKeys.up && context.joyStickKeys.up.isDown) {
         context.upKeyPressed = true;
-    } else if (context.cursors.down && context.cursors.down.isDown || context.joyStickKeys.down && context.joyStickKeys.down.isDown) {
-        context.downKeyPressed = true;
     } else {
         context.upKeyPressed = false;
+    }
+    
+    if (context.cursors.down && context.cursors.down.isDown || context.joyStickKeys.down && context.joyStickKeys.down.isDown) {
+        context.downKeyPressed = true;
+    } else {
         context.downKeyPressed = false;
     }
 
@@ -45,6 +43,12 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
         context.inventoryKeyPressed = false;
     }
 
+    if (context.cursors.swing && context.cursors.swing.isDown || context.virtualKeys.swing.isDown) {
+        context.swingKeyPressed = true;
+    } else {
+        context.swingKeyPressed = false;
+    }
+
     if (lockCharacter) {
         context.socket.emit('playerInput', {
             left: false,
@@ -53,9 +57,10 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
             down: false,
             shift: false,
             pickup: false,
-            inventory: context.inventoryKeyPressed
+            inventory: context.inventoryKeyPressed,
+            swing: false,
         });
-    } else if (left !== context.leftKeyPressed || right !== context.rightKeyPressed || up !== context.upKeyPressed || down !== context.downKeyPressed || shift !== context.shiftKeyPressed || pickup !== context.pickupKeyPressed || inventory !== context.inventoryKeyPressed) {
+    } else {
         context.socket.emit('playerInput', {
             left: context.leftKeyPressed,
             right: context.rightKeyPressed,
@@ -64,6 +69,7 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
             shift: context.shiftKeyPressed,
             pickup: context.pickupKeyPressed,
             inventory: context.inventoryKeyPressed,
+            swing: context.swingKeyPressed,
         });
     }
     //reset mobile keys
@@ -76,7 +82,10 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
         },
         inventory: {
             isDown: false
-        }
+        },
+        swing : {
+            isDown: false
+        },
     }
 
 }
