@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
-import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem } from './objects/playerController';
+import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem, addSword, removeSword } from './objects/playerController';
 import { addEnemy } from './objects/enemyController';
 import { addItem, removeItem } from './objects/itemsController';
 declare global {
@@ -17,6 +17,7 @@ const { io } = window;
 const players: PlayersType = {};
 const enemies: EnemiesType = {};
 const items: ItemsType = {};
+const swords: SwordsType = {};
 
 function preload(this: Phaser.Scene){
     assetLoader(this);
@@ -41,6 +42,7 @@ function create(this: SceneWithPlayersType){
     this.players = this.physics.add.group();
     this.enemies = this.physics.add.group();
     this.items = this.physics.add.group();
+    this.swords = this.physics.add.group();
 
     enemyPoints.forEach((enemy: SpawnPointType) => {
         const stringIndex = enemy.id || "idNotDefined";
@@ -82,9 +84,12 @@ function create(this: SceneWithPlayersType){
                 shift: false,
                 pickup: false,
                 inventory: false,
+                swing: false,
             },
             rolling: false,
             canRoll: true,
+            swinging: false,
+            canSwing: true,
             inventory: [],
             inventoryTick: true,
             inventoryOpened: false,
@@ -173,6 +178,20 @@ function create(this: SceneWithPlayersType){
             }
         });
     });
+
+    this.physics.add.overlap(this.players, this.swords, (player: Phaser.GameObjects.GameObject & {playerId?: string}, sword: Phaser.GameObjects.GameObject & {playerId?: string}) => {
+        const swordId = sword.playerId;
+        const playerId = player.playerId;
+
+        this.players.getChildren().forEach((player: PlayerType) => {
+            const id = player.playerId;
+            if (id === playerId) {
+                if (id !== swordId) {
+                    console.log(`${swordId} hit ${id}!`);
+                }
+            }
+        })
+    });
 }
 
 let previousTimeStamp = 0;
@@ -183,7 +202,7 @@ function update(this: SceneWithPlayersType){
 
         this.players.getChildren().forEach((player: PlayerType) => {
             const id = player.playerId;
-            const { input, rolling, canRoll } = players[id];
+            const { input, rolling, canRoll, swinging, canSwing } = players[id];
             if (input.shift && !rolling && canRoll) {
                 players[id].rolling = true;
                 players[id].canRoll = false;
@@ -193,6 +212,28 @@ function update(this: SceneWithPlayersType){
                 setTimeout(() => {
                     players[id].canRoll = true;
                 }, gameState.rollCooldown);
+            }
+
+            if (input.swing && !swinging && canSwing) {
+                players[id].swinging = true;
+                players[id].canSwing = false;
+                addSword(this, players[id]);
+                const emitObj = {
+                    direction: players[id].direction || Direction.d,
+                    playerId: players[id].playerId,
+                    x: players[id].x,
+                    y: players[id].y,
+                };
+                io.emit('newSword', emitObj);
+                swords[players[id].playerId] = emitObj;
+                setTimeout(() => {
+                    players[id].swinging = false;
+                    removeSword(this, players[id].playerId);
+                    delete swords[players[id].playerId];
+                }, gameState.swingLength);
+                setTimeout(() => {
+                    players[id].canSwing = true;
+                }, gameState.swingCooldown);
             }
 
             if (input.inventory) {
@@ -209,21 +250,24 @@ function update(this: SceneWithPlayersType){
 
             const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
             if (!player.body) return;
-            if (input.left) {
-                player.body.setVelocityX(-speed);
-            } else if (input.right) {
-                player.body.setVelocityX(speed);
-            } else {
-                player.body.setVelocityX(0);
-            }
 
-            if (input.up) {
-                player.body.setVelocityY(-speed);
-            } else if (input.down) {
-                player.body.setVelocityY(speed);
-            } else {
-                player.body.setVelocityY(0);
+            let xSpeed = 0;
+            if (input.left) {
+                xSpeed -= speed;
             }
+            if (input.right) {
+                xSpeed += speed;
+            }
+            player.body.setVelocityX(xSpeed);
+
+            let ySpeed = 0;
+            if (input.up) {
+                ySpeed -= speed;
+            } 
+            if (input.down) {
+                ySpeed += speed;
+            } 
+            player.body.setVelocityY(ySpeed);
 
             player.body.velocity.normalize().scale(speed);
 
@@ -246,6 +290,7 @@ function update(this: SceneWithPlayersType){
 
         io.emit('playerUpdates', players);
         io.emit('enemyUpdates', enemies);
+        io.emit('swordUpdates', swords);
     }
 
 }

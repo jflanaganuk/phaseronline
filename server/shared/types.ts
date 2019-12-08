@@ -23,6 +23,7 @@ export type InputType = {
     up: boolean;
     down: boolean;
     shift: boolean;
+    swing: boolean;
     pickup: boolean;
     inventory: boolean;
 };
@@ -46,6 +47,8 @@ export type PlayerType = {
     input: InputType;
     rolling: boolean;
     canRoll: boolean;
+    swinging: boolean;
+    canSwing: boolean;
     inventory: InventoryType[];
     inventoryTick: boolean;
     inventoryOpened: boolean;
@@ -86,6 +89,19 @@ export type EnemiesType = {
     [key: string]: EnemyType;
 }
 
+export type SwordType = {
+    x: number;
+    y: number;
+    playerId: string;
+    direction: Direction;
+    setPosition?(x: number, y: number): void;
+    destroy?(): void;
+}
+
+export type SwordsType = {
+    [key: string]: SwordType;
+}
+
 export type ItemType = {
     x: number;
     y: number;
@@ -113,6 +129,7 @@ export type SceneWithPlayersType = Phaser.Scene & {
     players: any;
     enemies: any;
     items: any;
+    swords: any;
     socket?: any;
 }
 
@@ -127,7 +144,10 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
         },
         inventory: {
             isDown: boolean;
-        }
+        },
+        swing: {
+            isDown: boolean;
+        },
     };
     joyStick: any;
     joyStickKeys: Phaser.Types.Input.Keyboard.CursorKeys | {
@@ -152,6 +172,7 @@ export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
     shiftKeyPressed: boolean;
     pickupKeyPressed: boolean;
     inventoryKeyPressed: boolean;
+    swingKeyPressed: boolean;
 };
 
 export type SpawnPointType = Phaser.GameObjects.GameObject & {
@@ -193,6 +214,11 @@ export type ItemImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Im
     itemId?: string;
 }
 
+export type SwordImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
+    playerId?: string;
+    direction?: string;
+}
+
 export type CustomCursorKeys = {
     up?: Phaser.Input.Keyboard.Key;
     down?: Phaser.Input.Keyboard.Key;
@@ -202,4 +228,5 @@ export type CustomCursorKeys = {
     shift?: Phaser.Input.Keyboard.Key;
     pickup?: Phaser.Input.Keyboard.Key;
     inventory?: Phaser.Input.Keyboard.Key;
+    swing?: Phaser.Input.Keyboard.Key;
 };

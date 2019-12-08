@@ -15,5 +15,7 @@ export const gameState = {
     speed: 200,
     rollModifier: 2,
     rollLength: 400,
-    rollCooldown: 1000
+    rollCooldown: 1000,
+    swingLength: 200,
+    swingCooldown: 500,
 };

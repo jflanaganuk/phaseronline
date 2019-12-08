@@ -3,11 +3,11 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
-import { onPlayerUpdate, displayPlayers } from './objects/playerController';
+import { onPlayerUpdate, displayPlayers, onSwordUpdate, displaySwords } from './objects/playerController';
 import { processInputs } from './objects/inputController';
 import { displayEnemies, onEnemyUpdate } from './objects/enemyController';
 import { displayItem } from './objects/itemsController';
@@ -39,6 +39,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.players = this.add.group();
     this.enemies = this.add.group();
     this.items = this.add.group();
+    this.swords = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
     const tileset = map.addTilesetImage("entities", "tiles", 16, 16, 1, 2);
@@ -111,6 +112,14 @@ function create(this: SceneWithPlayersAndInputType){
         onEnemyUpdate(enemies, self);
     });
 
+    this.socket.on('newSword', function(swordInfo: SwordType) {
+        displaySwords(self, swordInfo, 'sword');
+    });
+
+    this.socket.on('swordUpdates', function (swords: SwordsType){
+        onSwordUpdate(swords, self);
+    });
+
     this.socket.on('itemRemove', function (itemId: string) {
         self.items.getChildren().forEach((item: ItemType) => {
             if (itemId === item.itemId) {
@@ -142,10 +151,11 @@ function create(this: SceneWithPlayersAndInputType){
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
-        space: Phaser.Input.Keyboard.KeyCodes.SPACE,
         pickup: Phaser.Input.Keyboard.KeyCodes.E,
         inventory: Phaser.Input.Keyboard.KeyCodes.Q,
+        swing: Phaser.Input.Keyboard.KeyCodes.SPACE,
     });
+
     this.virtualKeys = {
         shift: {
             isDown: false
@@ -155,7 +165,10 @@ function create(this: SceneWithPlayersAndInputType){
         },
         inventory: {
             isDown: false
-        }
+        },
+        swing: {
+            isDown: false
+        },
     }
     //Test for devices
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)){
@@ -198,12 +211,18 @@ function create(this: SceneWithPlayersAndInputType){
     this.shiftKeyPressed = false;
     this.pickupKeyPressed = false;
     this.inventoryKeyPressed = false;
+    this.swingKeyPressed = false;
 
     ReactDOM.render(<App className={"container"}/>, document.getElementById("ui"));
 }
 
+let previousTimeStamp = 0;
+const fps = 1000/20;
 function update(this: SceneWithPlayersAndInputType){
-    processInputs(this, lockCharacter);
+    if ((previousTimeStamp + fps) < performance.now()) {
+        previousTimeStamp += fps;
+        processInputs(this, lockCharacter);
+    }
 }
 
 const game = new Phaser.Game(config);
