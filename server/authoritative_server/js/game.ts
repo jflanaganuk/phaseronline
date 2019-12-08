@@ -173,77 +173,80 @@ function create(this: SceneWithPlayersType){
             }
         });
     });
-
-    setInterval(() => {
-        io.emit('playerUpdates', players);
-        io.emit('enemyUpdates', enemies);
-    }, 1000/60);
 }
 
+let previousTimeStamp = 0;
+const fps = 1000/60;
 function update(this: SceneWithPlayersType){
+    if ((previousTimeStamp + fps) < performance.now()) {
+        previousTimeStamp += fps;
 
-    this.players.getChildren().forEach((player: PlayerType) => {
-        const id = player.playerId;
-        const { input, rolling, canRoll } = players[id];
-        if (input.shift && !rolling && canRoll) {
-            players[id].rolling = true;
-            players[id].canRoll = false;
-            setTimeout(() => {
-                players[id].rolling = false;
-            }, gameState.rollLength);
-            setTimeout(() => {
-                players[id].canRoll = true;
-            }, gameState.rollCooldown);
-        }
-
-        if (input.inventory) {
-            if (players[id].inventoryTick) {
-                players[id].inventoryOpened = !players[id].inventoryOpened;
-                players[id].inventoryTick = false;
-                io.emit('inventoryToggle', {playerId: id, opened: players[id].inventoryOpened, inventory: players[id].inventory});
+        this.players.getChildren().forEach((player: PlayerType) => {
+            const id = player.playerId;
+            const { input, rolling, canRoll } = players[id];
+            if (input.shift && !rolling && canRoll) {
+                players[id].rolling = true;
+                players[id].canRoll = false;
+                setTimeout(() => {
+                    players[id].rolling = false;
+                }, gameState.rollLength);
+                setTimeout(() => {
+                    players[id].canRoll = true;
+                }, gameState.rollCooldown);
             }
-        } else {
-            if (!players[id].inventoryTick) {
-                players[id].inventoryTick = true;
+
+            if (input.inventory) {
+                if (players[id].inventoryTick) {
+                    players[id].inventoryOpened = !players[id].inventoryOpened;
+                    players[id].inventoryTick = false;
+                    io.emit('inventoryToggle', {playerId: id, opened: players[id].inventoryOpened, inventory: players[id].inventory});
+                }
+            } else {
+                if (!players[id].inventoryTick) {
+                    players[id].inventoryTick = true;
+                }
             }
-        }
 
-        const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
-        if (!player.body) return;
-        if (input.left) {
-            player.body.setVelocityX(-speed);
-        } else if (input.right) {
-            player.body.setVelocityX(speed);
-        } else {
-            player.body.setVelocityX(0);
-        }
+            const speed = (rolling) ? gameState.speed * gameState.rollModifier : gameState.speed;
+            if (!player.body) return;
+            if (input.left) {
+                player.body.setVelocityX(-speed);
+            } else if (input.right) {
+                player.body.setVelocityX(speed);
+            } else {
+                player.body.setVelocityX(0);
+            }
 
-        if (input.up) {
-            player.body.setVelocityY(-speed);
-        } else if (input.down) {
-            player.body.setVelocityY(speed);
-        } else {
-            player.body.setVelocityY(0);
-        }
+            if (input.up) {
+                player.body.setVelocityY(-speed);
+            } else if (input.down) {
+                player.body.setVelocityY(speed);
+            } else {
+                player.body.setVelocityY(0);
+            }
 
-        player.body.velocity.normalize().scale(speed);
+            player.body.velocity.normalize().scale(speed);
 
-        players[id].x = player.x;
-        players[id].y = player.y;
-    })
+            players[id].x = player.x;
+            players[id].y = player.y;
+        })
 
-    this.enemies.getChildren().forEach((enemy: EnemyType) => {
-        const id = enemy.enemyId;
-        const speed = 50;
-        if (!enemy.body) return;
-        if (enemy.direction === Direction.u) enemy.body.setVelocityY(-speed);
-        if (enemy.direction === Direction.d) enemy.body.setVelocityY(speed);
-        if (enemy.direction === Direction.r) enemy.body.setVelocityX(speed);
-        if (enemy.direction === Direction.l) enemy.body.setVelocityX(-speed);
+        this.enemies.getChildren().forEach((enemy: EnemyType) => {
+            const id = enemy.enemyId;
+            const speed = 50;
+            if (!enemy.body) return;
+            if (enemy.direction === Direction.u) enemy.body.setVelocityY(-speed);
+            if (enemy.direction === Direction.d) enemy.body.setVelocityY(speed);
+            if (enemy.direction === Direction.r) enemy.body.setVelocityX(speed);
+            if (enemy.direction === Direction.l) enemy.body.setVelocityX(-speed);
 
-        enemies[id].x = enemy.x;
-        enemies[id].y = enemy.y;
-    });
+            enemies[id].x = enemy.x;
+            enemies[id].y = enemy.y;
+        });
+
+        io.emit('playerUpdates', players);
+        io.emit('enemyUpdates', enemies);
+    }
 
 }
 
