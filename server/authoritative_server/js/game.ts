@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
-import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem } from './objects/playerController';
+import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem, addSword, removeSword } from './objects/playerController';
 import { addEnemy } from './objects/enemyController';
 import { addItem, removeItem } from './objects/itemsController';
 declare global {
@@ -17,6 +17,7 @@ const { io } = window;
 const players: PlayersType = {};
 const enemies: EnemiesType = {};
 const items: ItemsType = {};
+const swords: SwordsType = {};
 
 function preload(this: Phaser.Scene){
     assetLoader(this);
@@ -41,6 +42,7 @@ function create(this: SceneWithPlayersType){
     this.players = this.physics.add.group();
     this.enemies = this.physics.add.group();
     this.items = this.physics.add.group();
+    this.swords = this.physics.add.group();
 
     enemyPoints.forEach((enemy: SpawnPointType) => {
         const stringIndex = enemy.id || "idNotDefined";
@@ -176,6 +178,20 @@ function create(this: SceneWithPlayersType){
             }
         });
     });
+
+    this.physics.add.overlap(this.players, this.swords, (player: Phaser.GameObjects.GameObject & {playerId?: string}, sword: Phaser.GameObjects.GameObject & {playerId?: string}) => {
+        const swordId = sword.playerId;
+        const playerId = player.playerId;
+
+        this.players.getChildren().forEach((player: PlayerType) => {
+            const id = player.playerId;
+            if (id === playerId) {
+                if (id !== swordId) {
+                    console.log(`${swordId} hit ${id}!`);
+                }
+            }
+        })
+    });
 }
 
 let previousTimeStamp = 0;
@@ -201,8 +217,19 @@ function update(this: SceneWithPlayersType){
             if (input.swing && !swinging && canSwing) {
                 players[id].swinging = true;
                 players[id].canSwing = false;
+                addSword(this, players[id]);
+                const emitObj = {
+                    direction: players[id].direction || Direction.d,
+                    playerId: players[id].playerId,
+                    x: players[id].x,
+                    y: players[id].y,
+                };
+                io.emit('newSword', emitObj);
+                swords[players[id].playerId] = emitObj;
                 setTimeout(() => {
                     players[id].swinging = false;
+                    removeSword(this, players[id].playerId);
+                    delete swords[players[id].playerId];
                 }, gameState.swingLength);
                 setTimeout(() => {
                     players[id].canSwing = true;
@@ -263,6 +290,7 @@ function update(this: SceneWithPlayersType){
 
         io.emit('playerUpdates', players);
         io.emit('enemyUpdates', enemies);
+        io.emit('swordUpdates', swords);
     }
 
 }

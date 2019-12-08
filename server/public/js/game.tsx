@@ -3,11 +3,11 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
-import { onPlayerUpdate, displayPlayers } from './objects/playerController';
+import { onPlayerUpdate, displayPlayers, onSwordUpdate, displaySwords } from './objects/playerController';
 import { processInputs } from './objects/inputController';
 import { displayEnemies, onEnemyUpdate } from './objects/enemyController';
 import { displayItem } from './objects/itemsController';
@@ -39,6 +39,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.players = this.add.group();
     this.enemies = this.add.group();
     this.items = this.add.group();
+    this.swords = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
     const tileset = map.addTilesetImage("entities", "tiles", 16, 16, 1, 2);
@@ -109,6 +110,14 @@ function create(this: SceneWithPlayersAndInputType){
 
     this.socket.on('enemyUpdates', function (enemies: EnemiesType){
         onEnemyUpdate(enemies, self);
+    });
+
+    this.socket.on('newSword', function(swordInfo: SwordType) {
+        displaySwords(self, swordInfo, 'sword');
+    });
+
+    this.socket.on('swordUpdates', function (swords: SwordsType){
+        onSwordUpdate(swords, self);
     });
 
     this.socket.on('itemRemove', function (itemId: string) {

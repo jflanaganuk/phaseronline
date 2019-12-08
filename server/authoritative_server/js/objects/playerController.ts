@@ -1,4 +1,4 @@
-import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType, Direction, ItemPayload } from "../../../shared/types";
+import { SceneWithPlayersType, PlayerType, PlayerImageType, InputType, PlayersType, Direction, ItemPayload, SwordImageType, SwordType } from "../../../shared/types";
 
 export function addPlayer(self: SceneWithPlayersType, playerInfo: PlayerType){
     const player: PlayerImageType = self.physics.add.image(playerInfo.x, playerInfo.y, 'player').setScale(2);
@@ -65,4 +65,18 @@ export function handleEquipItem(self: SceneWithPlayersType, playerId: string, it
         }
     });
     return success;
+}
+
+export function addSword(self: SceneWithPlayersType, player: PlayerType) {
+    const sword: SwordImageType = self.physics.add.image(player.x, player.y, 'swordHitbox').setScale(2);
+    sword.playerId = player.playerId;
+    self.swords.add(sword);
+}
+
+export function removeSword(self: SceneWithPlayersType, swordId: string) {
+    self.swords.getChildren().forEach((sword: SwordType) => {
+        if (swordId === sword.playerId) {
+            sword.destroy && sword.destroy();
+        }
+    });
 }

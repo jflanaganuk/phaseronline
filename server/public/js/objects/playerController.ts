@@ -1,4 +1,4 @@
-import { PlayersType, PlayerType, SceneWithPlayersAndInputType, PlayerImageType } from "../../../shared/types";
+import { PlayersType, PlayerType, SceneWithPlayersAndInputType, PlayerImageType, SwordsType, SwordType, SwordImageType, Direction } from "../../../shared/types";
 
 export function onPlayerUpdate(players: PlayersType, context: SceneWithPlayersAndInputType) {
     Object.keys(players).forEach(function(id) {
@@ -107,6 +107,15 @@ export function onPlayerUpdate(players: PlayersType, context: SceneWithPlayersAn
     });
 }
 
+export function onSwordUpdate(swords: SwordsType, self: SceneWithPlayersAndInputType) {
+    Object.keys(swords).forEach((id) => {
+        self.swords.getChildren().forEach(function(sword: SwordType){
+            const {x, y} = swords[id];
+            sword.setPosition && sword.setPosition(x, y);
+        });
+    });
+}
+
 export function displayPlayers(self: SceneWithPlayersAndInputType, playerInfo: PlayerType, sprite: string, socket: any, gameState: any){
     const player: PlayerImageType = self.add.sprite(playerInfo.x * 2, playerInfo.y * 2, sprite).setScale(2);
     player.playerId = playerInfo.playerId;
@@ -124,4 +133,30 @@ export function displayPlayers(self: SceneWithPlayersAndInputType, playerInfo: P
         camera.startFollow(player);
         camera.setBounds(0, 0, 1600, 1600);
     }
+}
+
+export function displaySwords(self: SceneWithPlayersAndInputType, swordInfo: SwordType, sprite: string) {
+    const sword = self.add.sprite(swordInfo.x, swordInfo.y, sprite).setScale(2);
+    const direction = () => {
+        switch (swordInfo.direction) {
+            case Direction.d:
+            case Direction.dl:
+            case Direction.dr:
+                return 'swordDown';
+            case Direction.u:
+            case Direction.ul:
+            case Direction.ur:
+                return 'swordUp';
+            case Direction.l:
+                return 'swordLeft';
+            case Direction.r:
+                return 'swordRight';
+        }
+    }
+    self.swords.add(sword);
+    sword.anims.play(direction());
+    sword.on('animationcomplete', function(this: SwordType){
+        this.destroy && this.destroy();
+        self.swords.remove(sword);
+    });
 }

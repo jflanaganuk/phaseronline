@@ -89,6 +89,19 @@ export type EnemiesType = {
     [key: string]: EnemyType;
 }
 
+export type SwordType = {
+    x: number;
+    y: number;
+    playerId: string;
+    direction: Direction;
+    setPosition?(x: number, y: number): void;
+    destroy?(): void;
+}
+
+export type SwordsType = {
+    [key: string]: SwordType;
+}
+
 export type ItemType = {
     x: number;
     y: number;
@@ -116,6 +129,7 @@ export type SceneWithPlayersType = Phaser.Scene & {
     players: any;
     enemies: any;
     items: any;
+    swords: any;
     socket?: any;
 }
 
@@ -198,6 +212,11 @@ export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.I
 
 export type ItemImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     itemId?: string;
+}
+
+export type SwordImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
+    playerId?: string;
+    direction?: string;
 }
 
 export type CustomCursorKeys = {

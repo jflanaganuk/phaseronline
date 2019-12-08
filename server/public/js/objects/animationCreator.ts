@@ -23,6 +23,11 @@ export function createAnimations(anims: Phaser.Animations.AnimationManager) {
     animWrapper(anims, 'swipeDown', 'playerSwipeDown', 3);
     animWrapper(anims, 'swipeRight', 'playerSwipeRight', 3);
 
+    animWrapper(anims, 'swordUp', 'swordSwipeUp', 4, 24, 0);
+    animWrapper(anims, 'swordLeft', 'swordSwipeLeft', 4, 24, 0);
+    animWrapper(anims, 'swordDown', 'swordSwipeDown', 4, 24, 0);
+    animWrapper(anims, 'swordRight', 'swordSwipeRight', 4, 24, 0);
+
     animWrapper(anims, 'idleLeft', 'playerMoveLeft');
     animWrapper(anims, 'idleRight', 'playerMoveRight');
     animWrapper(anims, 'idleUp', 'playerMoveUp');
