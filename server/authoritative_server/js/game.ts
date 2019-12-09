@@ -202,7 +202,7 @@ function update(this: SceneWithPlayersType){
 
         this.players.getChildren().forEach((player: PlayerType) => {
             const id = player.playerId;
-            const { input, rolling, canRoll, swinging, canSwing } = players[id];
+            const { input, rolling, canRoll, swinging, canSwing, equipment } = players[id];
             if (input.shift && !rolling && canRoll) {
                 players[id].rolling = true;
                 players[id].canRoll = false;
@@ -214,7 +214,7 @@ function update(this: SceneWithPlayersType){
                 }, gameState.rollCooldown);
             }
 
-            if (input.swing && !swinging && canSwing) {
+            if (input.swing && !swinging && canSwing && equipment.main) {
                 players[id].swinging = true;
                 players[id].canSwing = false;
                 addSword(this, players[id]);
