@@ -13,6 +13,10 @@ export function assetLoader(context: Phaser.Scene){
         frameWidth: 16,
         frameHeight: 16,
     });
+    context.load.spritesheet('swordHitbox', '../assets/TopDownCharacter/Weapon/Sword_Hitbox.png', {
+        frameWidth: 16,
+        frameHeight: 16,
+    });
     context.load.image("tiles", "../assets/entities.png");
     context.load.tilemapTiledJSON("map", "../assets/leveldata/start.json");
 }

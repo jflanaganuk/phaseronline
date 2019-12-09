@@ -67,8 +67,38 @@ export function handleEquipItem(self: SceneWithPlayersType, playerId: string, it
     return success;
 }
 
-export function addSword(self: SceneWithPlayersType, player: PlayerType) {
-    const sword: SwordImageType = self.physics.add.image(player.x, player.y, 'swordHitbox').setScale(2);
+export function addSword(self: SceneWithPlayersType, player: PlayerType, direction: Direction) {
+    const xOffset = () => {
+        switch(direction) {
+            case Direction.dl:
+            case Direction.l:
+            case Direction.ul:
+                return -16;
+            case Direction.dr:
+            case Direction.r:
+            case Direction.ur:
+                return 16;
+            case Direction.u:
+            case Direction.d:
+                return 0;
+        }
+    }
+    const yOffset = () => {
+        switch(direction) {
+            case Direction.dl:
+            case Direction.d:
+            case Direction.dr:
+                return 16;
+            case Direction.ul:
+            case Direction.u:
+            case Direction.ur:
+                return -16;
+            case Direction.l:
+            case Direction.r:
+                return 0;
+        }
+    }
+    const sword: SwordImageType = self.physics.add.image(player.x + xOffset(), player.y + yOffset(), 'swordHitbox').setScale(2);
     sword.playerId = player.playerId;
     self.swords.add(sword);
 }

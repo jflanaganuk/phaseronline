@@ -217,7 +217,7 @@ function update(this: SceneWithPlayersType){
             if (input.swing && !swinging && canSwing && equipment.main) {
                 players[id].swinging = true;
                 players[id].canSwing = false;
-                addSword(this, players[id]);
+                addSword(this, players[id], players[id].direction || Direction.d);
                 const emitObj = {
                     direction: players[id].direction || Direction.d,
                     playerId: players[id].playerId,
