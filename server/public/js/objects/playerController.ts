@@ -22,10 +22,10 @@ export function onPlayerUpdate(players: PlayersType, context: SceneWithPlayersAn
                         if (swinging) player.anims.play('swipeLeft', true);
                     } else if (direction === "upRight") {
                         if (!swinging) player.anims.play('idleUpRight', true);
-                        if (swinging) player.anims.play('swipeRight', true);
+                        if (swinging) player.anims.play('swipeUp', true);
                     } else if (direction === "downLeft") {
                         if (!swinging) player.anims.play('idleDownLeft', true);
-                        if (swinging) player.anims.play('swipeLeft', true);
+                        if (swinging) player.anims.play('swipeDown', true);
                     } else if (direction === "downRight") {
                         if (!swinging) player.anims.play('idleDownRight', true);
                         if (swinging) player.anims.play('swipeRight', true);
@@ -46,7 +46,7 @@ export function onPlayerUpdate(players: PlayersType, context: SceneWithPlayersAn
                         if (rolling) {
                             player.anims.play('rollUpRight', true);
                         } else if (swinging) {
-                            player.anims.play('swipeRight', true);
+                            player.anims.play('swipeUp', true);
                         } else {
                             player.anims.play('moveUpRight', true);
                         }
@@ -64,7 +64,7 @@ export function onPlayerUpdate(players: PlayersType, context: SceneWithPlayersAn
                         if (rolling) {
                             player.anims.play('rollDownLeft', true);
                         } else if (swinging) {
-                            player.anims.play('swipeLeft', true);
+                            player.anims.play('swipeDown', true);
                         } else {
                             player.anims.play('moveDownLeft', true);
                         }
@@ -141,15 +141,15 @@ export function displaySwords(self: SceneWithPlayersAndInputType, swordInfo: Swo
         switch (swordInfo.direction) {
             case Direction.d:
             case Direction.dl:
-            case Direction.dr:
                 return 'swordDown';
             case Direction.u:
-            case Direction.ul:
             case Direction.ur:
                 return 'swordUp';
+            case Direction.ul:
             case Direction.l:
                 return 'swordLeft';
             case Direction.r:
+            case Direction.dr:
                 return 'swordRight';
         }
     }
