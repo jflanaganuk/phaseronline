@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType, EnemyType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
@@ -99,6 +99,19 @@ function create(this: SceneWithPlayersAndInputType){
                 spawnEffect.on('animationcomplete', function(this: PlayerType){
                     this.destroy && this.destroy();
                     player.destroy && player.destroy();
+                });
+            }
+        });
+    });
+
+    this.socket.on('deleteEnemy', function (enemyId: string) {
+        self.enemies.getChildren().forEach(function (enemy: EnemyType) {
+            if (enemyId === enemy.enemyId) {
+                const spawnEffect = self.add.sprite(enemy.x, enemy.y - 10, 'spawnEffect');
+                spawnEffect.anims.playReverse('spawnLightning');
+                spawnEffect.on('animationcomplete', function(this: PlayerType) {
+                    this.destroy && this.destroy();
+                    enemy.destroy && enemy.destroy();
                 });
             }
         });

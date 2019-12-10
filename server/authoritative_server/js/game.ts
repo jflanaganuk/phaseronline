@@ -4,7 +4,7 @@ import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointTyp
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem, addSword, removeSword } from './objects/playerController';
-import { addEnemy } from './objects/enemyController';
+import { addEnemy, removeEnemy } from './objects/enemyController';
 import { addItem, removeItem } from './objects/itemsController';
 declare global {
     interface Window { io: any, gameLoaded: any }
@@ -191,6 +191,20 @@ function create(this: SceneWithPlayersType){
                 }
             }
         })
+    });
+
+    this.physics.add.overlap(this.enemies, this.swords, (enemy: Phaser.GameObjects.GameObject & { enemyId?: string }, sword: Phaser.GameObjects.GameObject & { playerId?: string }) => {
+        const swordId = sword.playerId;
+        const enemyId = enemy.enemyId;
+
+        this.enemies.getChildren().forEach((enemy: EnemyType) => {
+            const id = enemy.enemyId;
+            if (id === enemyId) {
+                removeEnemy(self, id);
+                delete enemies[id];
+                io.emit('deleteEnemy', id);
+            }
+        });
     });
 }
 
