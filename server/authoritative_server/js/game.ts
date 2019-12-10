@@ -236,6 +236,9 @@ function update(this: SceneWithPlayersType){
                 }, gameState.swingCooldown);
             }
 
+            swords[players[id].playerId] && (swords[players[id].playerId].x = players[id].x);
+            swords[players[id].playerId] && (swords[players[id].playerId].y = players[id].y);
+
             if (input.inventory) {
                 if (players[id].inventoryTick) {
                     players[id].inventoryOpened = !players[id].inventoryOpened;
