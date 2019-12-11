@@ -43,7 +43,7 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
         context.inventoryKeyPressed = false;
     }
 
-    if (context.cursors.swing && context.cursors.swing.isDown || context.virtualKeys.swing.isDown) {
+    if (context.mouse.isDown) {
         context.swingKeyPressed = true;
     } else {
         context.swingKeyPressed = false;

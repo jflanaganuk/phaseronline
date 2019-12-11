@@ -17,5 +17,5 @@ export const gameState = {
     rollLength: 400,
     rollCooldown: 1000,
     swingLength: 200,
-    swingCooldown: 300,
+    swingCooldown: 600,
 };
