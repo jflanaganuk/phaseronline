@@ -166,8 +166,9 @@ function create(this: SceneWithPlayersAndInputType){
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         pickup: Phaser.Input.Keyboard.KeyCodes.E,
         inventory: Phaser.Input.Keyboard.KeyCodes.Q,
-        swing: Phaser.Input.Keyboard.KeyCodes.SPACE,
     });
+
+    this.mouse = this.input.activePointer;
 
     this.virtualKeys = {
         shift: {

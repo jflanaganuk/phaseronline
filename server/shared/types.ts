@@ -135,6 +135,7 @@ export type SceneWithPlayersType = Phaser.Scene & {
 
 export type SceneWithPlayersAndInputType = SceneWithPlayersType & {
     cursors: CustomCursorKeys;
+    mouse: Phaser.Input.Pointer;
     virtualKeys: {
         shift: {
             isDown: boolean;
