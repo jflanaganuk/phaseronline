@@ -7,6 +7,7 @@ import { EventEmitter } from '../../events';
 
 import './App.scss';
 import { Character } from './Character/Character';
+import { Ping } from './Screen/Ping';
 
 type AppProps = {
     className: string;
@@ -57,15 +58,18 @@ export const App: React.FC<AppProps> = props => {
     });
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div className={props.className}>
-                {open &&
-                <div className={"inventoryModal"}></div>
-            }
-                <Inventory inventory={inventory} open={open} />
-                <Character open={open} equipment={equipment} />
-            </div>
-        </DndProvider>
+        <div>
+            <Ping/>
+            <DndProvider backend={HTML5Backend}>
+                <div className={props.className}>
+                    {open &&
+                    <div className={"inventoryModal"}></div>
+                }
+                    <Inventory inventory={inventory} open={open} />
+                    <Character open={open} equipment={equipment} />
+                </div>
+            </DndProvider>
+        </div>
     )
 }
 

@@ -158,6 +158,13 @@ function create(this: SceneWithPlayersAndInputType){
         }
     });
 
+    this.socket.on('sendPingCheck', (payload: {id: string; time: number}) => {
+        if (payload.id === this.socket.id) {
+            const ping = (Date.now() - payload.time) / 2;
+            EventEmitter.dispatch('pingUpdate', ping);
+        }
+    });
+
     this.cursors = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S,
@@ -230,11 +237,21 @@ function create(this: SceneWithPlayersAndInputType){
 }
 
 let previousTimeStamp = 0;
+let pingCheck = 0;
 const fps = 1000/20;
 function update(this: SceneWithPlayersAndInputType){
     if ((previousTimeStamp + fps) < performance.now()) {
         previousTimeStamp += fps;
         processInputs(this, lockCharacter);
+        if (pingCheck >= 20) { 
+            pingCheck = 0;
+            this.socket.emit('requestPingCheck', {
+                id: this.socket.id,
+                time: Date.now()
+            })
+        } else {
+            ++pingCheck;
+        }
     }
 }
 

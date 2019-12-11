@@ -122,6 +122,10 @@ function create(this: SceneWithPlayersType){
             const success: boolean = handleEquipItem(self, socket.id, payload, players);
             if (success) socket.emit('equippedItemToPlayer', {id: socket.id, item: payload});
         });
+
+        socket.on('requestPingCheck', function(payload: {id: string; time: number}){
+            io.emit('sendPingCheck', payload);
+        });
     })
     this.physics.add.collider(this.players, belowLayer);
     this.physics.add.collider(this.enemies, belowLayer, (obj: Phaser.GameObjects.GameObject & {enemyId?: string}) => {
