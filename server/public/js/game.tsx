@@ -164,7 +164,6 @@ function create(this: SceneWithPlayersAndInputType){
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
-        pickup: Phaser.Input.Keyboard.KeyCodes.E,
         inventory: Phaser.Input.Keyboard.KeyCodes.Q,
     });
 
