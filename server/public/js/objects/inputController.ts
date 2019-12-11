@@ -31,7 +31,7 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
         context.shiftKeyPressed = false;
     }
 
-    if (context.cursors.pickup && context.cursors.pickup.isDown || context.virtualKeys.pickup.isDown) {
+    if (context.mouse.rightButtonDown()) {
         context.pickupKeyPressed = true;
     } else {
         context.pickupKeyPressed = false;
@@ -43,7 +43,7 @@ export function processInputs(context: SceneWithPlayersAndInputType, lockCharact
         context.inventoryKeyPressed = false;
     }
 
-    if (context.mouse.isDown) {
+    if (context.mouse.leftButtonDown()) {
         context.swingKeyPressed = true;
     } else {
         context.swingKeyPressed = false;
