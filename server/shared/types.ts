@@ -81,6 +81,7 @@ export type EnemyType = {
     damage: number;
     speed: number;
     health: number;
+    maxHealth: number;
     drops: {item: string; chance: number}[];
     beenHit: boolean;
     destroy?(): void;
@@ -134,6 +135,7 @@ export type ItemDatabaseEntry = {
 export type SceneWithPlayersType = Phaser.Scene & {
     players: any;
     enemies: any;
+    enemiesHealthBars: any;
     items: any;
     swords: any;
     socket?: any;
@@ -215,6 +217,10 @@ export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.
 export type EnemyImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     enemyId?: string;
     direction?: Direction;
+}
+
+export type EnemyHealthBarType = (Phaser.GameObjects.Rectangle) & {
+    enemyId?: string;
 }
 
 export type ItemImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
