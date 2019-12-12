@@ -58,6 +58,7 @@ function create(this: SceneWithPlayersType){
             damage: enemyDatabase[enemy.type].damage,
             speed: enemyDatabase[enemy.type].speed,
             health: enemyDatabase[enemy.type].health,
+            maxHealth: enemyDatabase[enemy.type].health,
             drops: enemyDatabase[enemy.type].drops,
             beenHit: false,
         }

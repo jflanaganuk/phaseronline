@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType, EnemyType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType, EnemyType, EnemyHealthBarType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
@@ -38,6 +38,7 @@ function create(this: SceneWithPlayersAndInputType){
     window.exposed = self;
     this.players = this.add.group();
     this.enemies = this.add.group();
+    this.enemiesHealthBars = this.add.group();
     this.items = this.add.group();
     this.swords = this.add.group();
 
@@ -75,8 +76,8 @@ function create(this: SceneWithPlayersAndInputType){
         });
     });
 
-    this.socket.on('currentEnemies', function(enemies: EnemiesType) {
-        Object.keys(enemies).forEach(function (id){
+    this.socket.on('currentEnemies', (enemies: EnemiesType) => {
+        Object.keys(enemies).forEach((id) => {
             displayEnemies(self, enemies[id], 'enemy');
         });
     });
@@ -112,6 +113,11 @@ function create(this: SceneWithPlayersAndInputType){
                 spawnEffect.on('animationcomplete', function(this: PlayerType) {
                     this.destroy && this.destroy();
                     enemy.destroy && enemy.destroy();
+                });
+                self.enemiesHealthBars.getChildren().forEach(function (enemyHealthBar: EnemyHealthBarType){
+                    if (enemyId === enemyHealthBar.enemyId) {
+                        enemyHealthBar.destroy && enemyHealthBar.destroy();
+                    }
                 });
             }
         });
