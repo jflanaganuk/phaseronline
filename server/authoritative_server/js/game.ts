@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType, ItemDatabaseEntry } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType, ItemDatabaseEntry, SwordType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem, addSword, removeSword } from './objects/playerController';
@@ -59,6 +59,7 @@ function create(this: SceneWithPlayersType){
             speed: enemyDatabase[enemy.type].speed,
             health: enemyDatabase[enemy.type].health,
             drops: enemyDatabase[enemy.type].drops,
+            beenHit: false,
         }
         addEnemy(self, enemies[stringIndex]);
     });
@@ -211,9 +212,21 @@ function create(this: SceneWithPlayersType){
         this.enemies.getChildren().forEach((enemy: EnemyType) => {
             const id = enemy.enemyId;
             if (id === enemyId) {
-                removeEnemy(self, id);
-                delete enemies[id];
-                io.emit('deleteEnemy', id);
+                this.players.getChildren().forEach((player: PlayerType) => {
+                    if (swordId === player.playerId && !enemies[id].beenHit) {
+                        const { equipment } = players[swordId];
+                        enemies[id].beenHit = true;
+                        const damage = equipment.main ? equipment.main.damage : 0;
+                        enemies[id].health -= damage;
+                        if (enemies[id].health <= 0) {
+                            removeEnemy(self, id);
+                            delete enemies[id];
+                            io.emit('deleteEnemy', id);
+                        } else {
+                            setTimeout(() => enemies[id].beenHit = false, gameState.hitCooldown);
+                        }
+                    }
+                });
             }
         });
     });
