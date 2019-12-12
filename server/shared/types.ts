@@ -73,10 +73,15 @@ export type PlayersType = {
 }
 
 export type EnemyType = {
+    type: string;
     x: number;
     y: number;
     enemyId: string;
     direction: Direction;
+    damage: number;
+    speed: number;
+    health: number;
+    drops: {item: string; chance: number}[];
     destroy?(): void;
     setPosition?(x: number, y: number): void;
     body?: Phaser.Physics.Arcade.Body;
