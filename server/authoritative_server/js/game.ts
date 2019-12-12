@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Socket } from 'socket.io';
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SpawnPointType, EnemiesType, EnemySpawnsType, EnemyType, Direction, CustomProperty, ItemsType, ItemSpawnsType, ItemTypeEnum, ItemType, ItemPayload, SwordsType, ItemDatabaseEntry } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { addPlayer, removePlayer, handlePlayerInput, handleEquipItem, addSword, removeSword } from './objects/playerController';
@@ -29,6 +29,8 @@ config.scene = {
     update
 }
 
+const enemyDatabase = require('../../shared/enemy_database.json');
+
 function create(this: SceneWithPlayersType){
     const self = this;
     const map = this.make.tilemap({ key: "map"});
@@ -48,10 +50,15 @@ function create(this: SceneWithPlayersType){
         const stringIndex = enemy.id || "idNotDefined";
         const directionObj: CustomProperty | false = enemy.properties && enemy.properties.filter(property => property.name === "direction")[0] || false;
         enemies[stringIndex] = {
+            type: enemy.type,
             x: enemy.x ? enemy.x * 2 : 0,
             y: enemy.y ? enemy.y * 2 : 0,
             direction: directionObj && directionObj.value as Direction || Direction.d,
-            enemyId: stringIndex
+            enemyId: stringIndex,
+            damage: enemyDatabase[enemy.type].damage,
+            speed: enemyDatabase[enemy.type].speed,
+            health: enemyDatabase[enemy.type].health,
+            drops: enemyDatabase[enemy.type].drops,
         }
         addEnemy(self, enemies[stringIndex]);
     });
@@ -251,7 +258,7 @@ function update(this: SceneWithPlayersType){
                 }, gameState.swingLength);
                 setTimeout(() => {
                     players[id].canSwing = true;
-                }, gameState.swingCooldown);
+                }, equipment.main.speed * 60);
             }
 
             swords[players[id].playerId] && (swords[players[id].playerId].x = players[id].x);
