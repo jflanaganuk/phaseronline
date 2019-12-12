@@ -3,7 +3,7 @@
         "item_name": "common_sword",
         "readable_name": "Common Sword",
         "description": "A sword for stabbing things with.",
-        "damage": 5,
+        "damage": 2,
         "speed": 10,
         "stackable": false,
         "equip_type": "main"
