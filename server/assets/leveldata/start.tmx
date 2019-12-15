@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="37">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="38">
  <tileset firstgid="1" name="entities" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../entities.png" width="256" height="256"/>
   <tile id="0">
@@ -1373,6 +1373,12 @@
    <point/>
   </object>
   <object id="36" name="item" type="arrow" x="121.625" y="421.875">
+   <point/>
+  </object>
+  <object id="37" name="npc" type="wizard" x="222.667" y="92">
+   <properties>
+    <property name="npc_name" value="spawn_wizard"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

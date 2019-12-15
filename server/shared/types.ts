@@ -17,6 +17,10 @@ export enum ItemTypeEnum {
     bow = 'bow',
 }
 
+export enum NpcTypeEnum {
+    wizard = 'wizard'
+}
+
 export type InputType = {
     left: boolean;
     right: boolean;
@@ -122,6 +126,17 @@ export type ItemsType = {
     [key:string]: ItemType;
 }
 
+export type NpcType = {
+    x: number;
+    y: number;
+    type: NpcTypeEnum;
+    destroy?(): void;
+};
+
+export type NpcsType = {
+    [key:string]: NpcType;
+};
+
 export type ItemDatabaseEntry = {
     item_name: string;
     readable_name: string;
@@ -137,6 +152,7 @@ export type SceneWithPlayersType = Phaser.Scene & {
     enemies: any;
     enemiesHealthBars: any;
     items: any;
+    npcs: any;
     swords: any;
     socket?: any;
 }
@@ -210,6 +226,12 @@ export type ItemSpawnsType = (Phaser.GameObjects.GameObject & {
     y?: number;
 })[];
 
+export type NpcSpawnsType = (Phaser.GameObjects.GameObject & {
+    id?: string;
+    x?: number;
+    y?: number;
+})[];
+
 export type PlayerImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     playerId?: string;
 }
@@ -225,6 +247,10 @@ export type EnemyHealthBarType = (Phaser.GameObjects.Rectangle) & {
 
 export type ItemImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
     itemId?: string;
+}
+
+export type NpcImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {
+    npc_name?: string;
 }
 
 export type SwordImageType = (Phaser.Physics.Arcade.Image | Phaser.GameObjects.Image) & {

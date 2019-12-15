@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType, EnemyType, EnemyHealthBarType } from '../../shared/types';
+import { PlayerType, PlayersType, InputType, SceneWithPlayersType, SceneWithPlayersAndInputType, PlayerImageType, EnemiesType, ItemsType, ItemType, InventoryType, ItemPayload, SwordsType, SwordType, EnemyType, EnemyHealthBarType, NpcsType } from '../../shared/types';
 import { assetLoader } from './objects/assetLoader';
 import { config, gameState } from './objects/constants';
 import { createAnimations } from './objects/animationCreator';
@@ -15,6 +15,7 @@ import { displayItem } from './objects/itemsController';
 import App from './ui/components/App';
 
 import { EventEmitter } from './events';
+import { displayNpc } from './objects/npcController';
 
 config.scene = {
     preload,
@@ -40,6 +41,7 @@ function create(this: SceneWithPlayersAndInputType){
     this.enemies = this.add.group();
     this.enemiesHealthBars = this.add.group();
     this.items = this.add.group();
+    this.npcs = this.add.group();
     this.swords = this.add.group();
 
     const map = this.make.tilemap({ key: "map"});
@@ -85,6 +87,13 @@ function create(this: SceneWithPlayersAndInputType){
     this.socket.on('currentItems', function(items: ItemsType) {
         Object.keys(items).forEach(function (id){
             displayItem(self, items[id]);
+        });
+    });
+
+    this.socket.on('currentNpcs', (npcs: NpcsType) => {
+        console.log(npcs);
+        Object.keys(npcs).forEach((id) => {
+            displayNpc(self, npcs[id]);
         });
     });
 
