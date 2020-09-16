@@ -14,6 +14,18 @@ npm run start
 
 Go to localhost:9090
 
+## To run tests
+
+In terminal 1:
+```
+npm run start
+```
+
+In a new terminal (2):
+```
+npm run test
+```
+
 ## To create levels
 
 Download a program called [Tiled](https://www.mapeditor.org/)

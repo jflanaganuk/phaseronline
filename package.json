@@ -7,6 +7,7 @@
     "build": "cd server/authoritative_server && npm run build && cd ../public && npm run build",
     "start": "npm run build && node server/index.js",
     "init": "lerna init",
+	"test": "node tests/basic.js",
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap"
   },
@@ -36,6 +37,7 @@
     "webpack-cli": "^3.3.2"
   },
   "devDependencies": {
-    "lerna": "^3.15.0"
+    "lerna": "^3.15.0",
+    "playwright": "^1.4.0"
   }
 }
